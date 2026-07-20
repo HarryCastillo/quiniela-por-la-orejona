@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificación de correo — Quiniela Amigos</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0d0d0d;
+    --panel-1: #161616;
+    --panel-2: #1a1a1a;
+    --panel-3: #2a2a2a;
+    --text: #f0f0f0;
+    --text-2: #aaa;
+    --text-3: #888;
+    --text-4: #777;
+    --border-1: #444;
+    --border-2: #333;
+    --green: #00c06b;
+    --green-dark: #009952;
+    --green-light: #48c78e;
+    --gold: #f5c518;
+    --bronze: #cd7f32;
+    --error: #e63329;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ -webkit-text-size-adjust: 100%; }
+
+  body{
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(0,192,107,0.10), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 64px);
+    color: var(--text);
+    font-family: 'Work Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-x: hidden;
+  }
+
+  .wrap{
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .badge{
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    border: 3px solid var(--green);
+    color: var(--green-light);
+    background: var(--panel-2);
+  }
+
+  .badge.error{
+    border-color: var(--error);
+    color: var(--error);
+  }
+
+  .eyebrow{
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin: 0 0 14px;
+  }
+
+  .badge.error ~ .eyebrow,
+  .state.error .eyebrow{ color: var(--error); }
+
+  h1{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(32px, 8vw, 52px);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    margin: 0 0 18px;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  p.lead{
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-2);
+    max-width: 420px;
+    margin: 0 auto 32px;
+  }
+
+  .card{
+    background: var(--panel-2);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-3);
+    margin: 0 auto 32px;
+    display: inline-block;
+  }
+
+  .btn{
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--green);
+    padding: 14px 32px;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+  }
+
+  .btn:hover{ background: var(--green-dark); }
+
+  .btn.secondary{
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border-1);
+  }
+
+  .btn.secondary:hover{ color: var(--text); border-color: var(--text-2); }
+
+  .state{ display: none; }
+  .state.active{ display: block; }
+
+  @media (max-width: 480px){
+    p.lead{ font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div id="estado-cargando" class="state active">
+      <p class="eyebrow">Quiniela Amigos</p>
+      <h1>Verificando…</h1>
+      <p class="lead">Danos un segundo, estamos confirmando tu correo.</p>
+    </div>
+
+    <div id="estado-ok" class="state">
+      <div class="badge">✓</div>
+      <p class="eyebrow">Quiniela Amigos</p>
+      <h1>Correo verificado</h1>
+      <p class="lead">Tu cuenta ya está activa. Ya puedes iniciar sesión y empezar a registrar tus pronósticos.</p>
+      <a class="btn" href="./index.html">Ir a la quiniela</a>
+    </div>
+
+    <div id="estado-error" class="state">
+      <div class="badge error">!</div>
+      <p class="eyebrow">Quiniela Amigos</p>
+      <h1>No pudimos verificarlo</h1>
+      <p class="lead">El link puede haber expirado o ya haberse usado antes. Vuelve a intentar tu registro con el mismo correo — se genera un link nuevo.</p>
+      <div class="card" id="detalle-error"></div>
+      <br>
+      <a class="btn secondary" href="./index.html">Volver al inicio</a>
+    </div>
+
+  </div>
+
+  <script>
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      var ok = params.get('ok');
+      var error = params.get('error');
+
+      var cargando = document.getElementById('estado-cargando');
+      var estadoOk = document.getElementById('estado-ok');
+      var estadoError = document.getElementById('estado-error');
+      var detalleError = document.getElementById('detalle-error');
+
+      cargando.classList.remove('active');
+
+      var mensajesError = {
+        faltante: 'El link no trae la información necesaria para verificar tu correo.',
+        invalido: 'Este link ya se usó o no es válido. Si ya te registraste antes, intenta iniciar sesión.',
+        expirado: 'Este link expiró (los links duran 48 horas). Vuelve a registrarte con el mismo correo para recibir uno nuevo.',
+        servidor: 'Tuvimos un problema de nuestro lado al verificar tu correo. Intenta de nuevo en unos minutos.',
+      };
+
+      if (ok === '1') {
+        estadoOk.classList.add('active');
+      } else {
+        var mensaje = mensajesError[error];
+        if (mensaje) {
+          document.querySelector('#estado-error p.lead').textContent = mensaje;
+          detalleError.style.display = 'none';
+        } else if (error) {
+          detalleError.textContent = 'ref: ' + error;
+        } else {
+          detalleError.style.display = 'none';
+        }
+        estadoError.classList.add('active');
+      }
+    })();
+  </script>
+</body>
+</html>
