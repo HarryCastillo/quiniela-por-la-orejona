@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiniela Amigos — Por la Orejona 2026-2027</title>
-<meta name="description" content="Quiniela Amigos, temporada 2026-2027. Muy pronto abrimos inscripciones.">
+<meta name="description" content="Quiniela Amigos, temporada 2026-2027. Regístrate para pronosticar la Champions League.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,6 +25,7 @@
     --green-light: #48c78e;
     --gold: #f5c518;
     --bronze: #cd7f32;
+    --error: #e63329;
   }
 
   *{ box-sizing: border-box; }
@@ -139,8 +140,192 @@
     line-height: 1.6;
   }
 
-  .status{
+  /* ---------- Panel de acceso ---------- */
+
+  .panel-acceso{
     margin-top: 46px;
+    background: var(--panel-1);
+    border: 1px solid var(--border-2);
+    border-radius: 14px;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .tabs{
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .tab{
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .tab.active{
+    background: var(--panel-3);
+    color: var(--green-light);
+  }
+
+  .tab:hover:not(.active){ color: var(--text-2); }
+
+  .form-body{ padding: 24px 22px 26px; }
+
+  .campo{ margin-bottom: 16px; }
+
+  .campo label{
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 7px;
+  }
+
+  .campo input{
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border-1);
+    color: var(--text);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .campo input:focus{ border-color: var(--green); }
+
+  .btn-enviar{
+    width: 100%;
+    background: var(--green);
+    color: var(--bg);
+    border: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.15s ease, opacity 0.15s ease;
+  }
+
+  .btn-enviar:hover{ background: var(--green-dark); }
+  .btn-enviar:disabled{ opacity: 0.5; cursor: not-allowed; }
+
+  .mensaje{
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-top: 14px;
+    display: none;
+  }
+
+  .mensaje.error{
+    display: block;
+    background: rgba(230,51,41,0.1);
+    border: 1px solid var(--error);
+    color: #ff8079;
+  }
+
+  .mensaje.exito{
+    display: block;
+    background: rgba(0,192,107,0.1);
+    border: 1px solid var(--green);
+    color: var(--green-light);
+  }
+
+  .form-view{ display: none; }
+  .form-view.active{ display: block; }
+
+  /* Estado: correo enviado tras registro */
+  .aviso-correo{
+    text-align: center;
+    padding: 10px 6px 4px;
+  }
+
+  .aviso-correo .icono{
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    border: 3px solid var(--green);
+    color: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+
+  .aviso-correo h2{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+
+  .aviso-correo p{
+    font-size: 15px;
+    color: var(--text-2);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* Estado: ya autenticado */
+  .bienvenida{
+    text-align: center;
+    padding: 10px 6px 4px;
+  }
+
+  .bienvenida h2{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 26px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: var(--green-light);
+  }
+
+  .bienvenida p{
+    font-size: 15px;
+    color: var(--text-2);
+    margin: 0 0 18px;
+  }
+
+  .link-salir{
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .link-salir:hover{ color: var(--text-2); }
+
+  .status{
+    margin-top: 40px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -171,6 +356,7 @@
   @media (max-width: 480px){
     .handle{ width: 26px; height: 46px; }
     p.lead{ font-size: 16px; }
+    .form-body{ padding: 20px 16px 22px; }
   }
 </style>
 </head>
@@ -183,9 +369,251 @@
     <p class="eyebrow">Quiniela Amigos</p>
     <h1>Por la <span class="accent">Orejona</span></h1>
     <div class="season">Temporada <b>2026&ndash;2027</b></div>
-    <p class="lead">Estamos armando la cancha. Muy pronto abrimos inscripciones para pronosticar la fase de liga, playoffs y todo el camino hasta la final.</p>
+    <p class="lead">Pronostica la fase de liga, playoffs y todo el camino hasta la Final de la Champions League.</p>
     <p class="sub">¿Ya jugaste con nosotros el Mundial 2026? Aquí seguimos — mismo grupo, nuevo torneo.</p>
-    <div class="status"><span class="dot"></span> En construcción</div>
+
+    <div class="panel-acceso" id="panel-acceso">
+
+      <!-- Tabs -->
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-target="vista-registro" type="button">Registrarme</button>
+        <button class="tab" data-target="vista-login" type="button">Ya tengo cuenta</button>
+      </div>
+
+      <div class="form-body">
+
+        <!-- Vista: registro -->
+        <div class="form-view active" id="vista-registro">
+          <form id="form-registro" novalidate>
+            <div class="campo">
+              <label for="reg-nombre">Nombre</label>
+              <input type="text" id="reg-nombre" autocomplete="name" required>
+            </div>
+            <div class="campo">
+              <label for="reg-correo">Correo</label>
+              <input type="email" id="reg-correo" autocomplete="email" required>
+            </div>
+            <div class="campo">
+              <label for="reg-password">Contraseña (mínimo 8 caracteres)</label>
+              <input type="password" id="reg-password" autocomplete="new-password" minlength="8" required>
+            </div>
+            <button class="btn-enviar" type="submit" id="btn-registro">Crear mi cuenta</button>
+            <div class="mensaje" id="mensaje-registro"></div>
+          </form>
+        </div>
+
+        <!-- Vista: login -->
+        <div class="form-view" id="vista-login">
+          <form id="form-login" novalidate>
+            <div class="campo">
+              <label for="login-correo">Correo</label>
+              <input type="email" id="login-correo" autocomplete="email" required>
+            </div>
+            <div class="campo">
+              <label for="login-password">Contraseña</label>
+              <input type="password" id="login-password" autocomplete="current-password" required>
+            </div>
+            <button class="btn-enviar" type="submit" id="btn-login">Iniciar sesión</button>
+            <div class="mensaje" id="mensaje-login"></div>
+          </form>
+        </div>
+
+        <!-- Vista: correo de verificación enviado -->
+        <div class="form-view" id="vista-correo-enviado">
+          <div class="aviso-correo">
+            <div class="icono">✉</div>
+            <h2>Revisa tu correo</h2>
+            <p>Te mandamos un link para confirmar tu cuenta. Puede tardar unos minutos y a veces cae en spam. El link es válido por 48 horas.</p>
+          </div>
+        </div>
+
+        <!-- Vista: ya autenticado -->
+        <div class="form-view" id="vista-autenticado">
+          <div class="bienvenida">
+            <h2 id="saludo-nombre">¡Bienvenido!</h2>
+            <p id="estado-pago-texto"></p>
+            <button class="link-salir" id="btn-salir" type="button">Cerrar sesión</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="status"><span class="dot"></span> Registro abierto</div>
   </div>
+
+  <script>
+    (function(){
+      var SLUG_TENANT = 'amigos';
+      var URL_REGISTRO = 'https://registrarusuario-guv46sjobq-uc.a.run.app';
+      var URL_LOGIN = 'https://login-guv46sjobq-uc.a.run.app';
+      var CLAVE_STORAGE = 'quiniela_sesion';
+
+      var tabs = document.querySelectorAll('.tab');
+      var vistas = document.querySelectorAll('.form-view');
+
+      function mostrarVista(id){
+        vistas.forEach(function(v){ v.classList.remove('active'); });
+        document.getElementById(id).classList.add('active');
+      }
+
+      function activarTab(target){
+        tabs.forEach(function(t){
+          t.classList.toggle('active', t.dataset.target === target);
+        });
+        mostrarVista(target);
+      }
+
+      tabs.forEach(function(tab){
+        tab.addEventListener('click', function(){
+          activarTab(tab.dataset.target);
+        });
+      });
+
+      function mostrarMensaje(elId, texto, tipo){
+        var el = document.getElementById(elId);
+        el.textContent = texto;
+        el.className = 'mensaje ' + tipo;
+      }
+
+      function limpiarMensaje(elId){
+        var el = document.getElementById(elId);
+        el.textContent = '';
+        el.className = 'mensaje';
+      }
+
+      // ---------- Registro ----------
+      var formRegistro = document.getElementById('form-registro');
+      var btnRegistro = document.getElementById('btn-registro');
+
+      formRegistro.addEventListener('submit', function(e){
+        e.preventDefault();
+        limpiarMensaje('mensaje-registro');
+
+        var nombre = document.getElementById('reg-nombre').value.trim();
+        var correo = document.getElementById('reg-correo').value.trim();
+        var password = document.getElementById('reg-password').value;
+
+        if (!nombre || !correo || !password){
+          mostrarMensaje('mensaje-registro', 'Completa todos los campos.', 'error');
+          return;
+        }
+        if (password.length < 8){
+          mostrarMensaje('mensaje-registro', 'La contraseña debe tener al menos 8 caracteres.', 'error');
+          return;
+        }
+
+        btnRegistro.disabled = true;
+        btnRegistro.textContent = 'Enviando…';
+
+        fetch(URL_REGISTRO, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({slug: SLUG_TENANT, nombre: nombre, correo: correo, password: password})
+        })
+          .then(function(resp){
+            return resp.json().then(function(data){ return {status: resp.status, data: data}; });
+          })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              mostrarVista('vista-correo-enviado');
+            } else {
+              mostrarMensaje('mensaje-registro', res.data.error || 'No se pudo completar el registro.', 'error');
+            }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-registro', 'No pudimos conectar con el servidor. Revisa tu internet e intenta de nuevo.', 'error');
+          })
+          .finally(function(){
+            btnRegistro.disabled = false;
+            btnRegistro.textContent = 'Crear mi cuenta';
+          });
+      });
+
+      // ---------- Login ----------
+      var formLogin = document.getElementById('form-login');
+      var btnLogin = document.getElementById('btn-login');
+
+      formLogin.addEventListener('submit', function(e){
+        e.preventDefault();
+        limpiarMensaje('mensaje-login');
+
+        var correo = document.getElementById('login-correo').value.trim();
+        var password = document.getElementById('login-password').value;
+
+        if (!correo || !password){
+          mostrarMensaje('mensaje-login', 'Completa correo y contraseña.', 'error');
+          return;
+        }
+
+        btnLogin.disabled = true;
+        btnLogin.textContent = 'Entrando…';
+
+        fetch(URL_LOGIN, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({slug: SLUG_TENANT, correo: correo, password: password})
+        })
+          .then(function(resp){
+            return resp.json().then(function(data){ return {status: resp.status, data: data}; });
+          })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              guardarSesion(res.data);
+              mostrarSesionActiva(res.data);
+            } else {
+              mostrarMensaje('mensaje-login', res.data.error || 'No se pudo iniciar sesión.', 'error');
+            }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-login', 'No pudimos conectar con el servidor. Revisa tu internet e intenta de nuevo.', 'error');
+          })
+          .finally(function(){
+            btnLogin.disabled = false;
+            btnLogin.textContent = 'Iniciar sesión';
+          });
+      });
+
+      // ---------- Sesión ----------
+      function guardarSesion(datos){
+        localStorage.setItem(CLAVE_STORAGE, JSON.stringify({
+          token: datos.token,
+          nombre: datos.nombre,
+          estadoPago: datos.estadoPago
+        }));
+      }
+
+      function mostrarSesionActiva(datos){
+        document.getElementById('saludo-nombre').textContent = 'Hola, ' + datos.nombre;
+        var textoPago = {
+          pendiente: 'Tu registro está confirmado. Todavía no tienes pago registrado — puedes pronosticar la jornada 1, para el resto necesitas completar tu pago.',
+          pagado: 'Tu pago está registrado. Ya puedes pronosticar todas las jornadas.',
+          deshabilitado: 'Tu cuenta está deshabilitada por falta de pago. Contacta a Harry para regularizarte.'
+        };
+        document.getElementById('estado-pago-texto').textContent = textoPago[datos.estadoPago] || '';
+        document.getElementById('tabs').style.display = 'none';
+        mostrarVista('vista-autenticado');
+      }
+
+      document.getElementById('btn-salir').addEventListener('click', function(){
+        localStorage.removeItem(CLAVE_STORAGE);
+        document.getElementById('tabs').style.display = 'flex';
+        activarTab('vista-login');
+      });
+
+      // Si ya hay sesión guardada al cargar la página, muestra bienvenida
+      // directamente (nota: esto no valida el token contra el servidor,
+      // solo evita mostrarle el formulario a quien ya inició sesión antes).
+      var sesionGuardada = localStorage.getItem(CLAVE_STORAGE);
+      if (sesionGuardada){
+        try {
+          var datos = JSON.parse(sesionGuardada);
+          mostrarSesionActiva(datos);
+        } catch(e){
+          localStorage.removeItem(CLAVE_STORAGE);
+        }
+      }
+    })();
+  </script>
 </body>
 </html>
