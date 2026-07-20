@@ -358,6 +358,73 @@
     p.lead{ font-size: 16px; }
     .form-body{ padding: 20px 16px 22px; }
   }
+
+  /* ---------- Reglas ---------- */
+
+  .reglas-content{
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  .reglas-content h3{
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin: 22px 0 8px;
+  }
+
+  .reglas-content h3:first-child{ margin-top: 0; }
+
+  .reglas-content p{
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-2);
+    margin: 0 0 10px;
+  }
+
+  .reglas-content strong{ color: var(--text); }
+
+  .reglas-content .tabla-wrap{
+    overflow-x: auto;
+    margin: 0 0 14px;
+  }
+
+  .reglas-content table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .reglas-content th{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-1);
+  }
+
+  .reglas-content td{
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-2);
+    color: var(--text-2);
+  }
+
+  .reglas-content td.num{ color: var(--gold); font-weight: 700; }
+
+  .reglas-content .contacto{
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-2);
+  }
 </style>
 </head>
 <body>
@@ -378,6 +445,7 @@
       <div class="tabs" id="tabs">
         <button class="tab active" data-target="vista-registro" type="button">Registrarme</button>
         <button class="tab" data-target="vista-login" type="button">Ya tengo cuenta</button>
+        <button class="tab" data-target="vista-reglas" type="button">Reglas</button>
       </div>
 
       <div class="form-body">
@@ -433,6 +501,67 @@
             <h2 id="saludo-nombre">¡Bienvenido!</h2>
             <p id="estado-pago-texto"></p>
             <button class="link-salir" id="btn-salir" type="button">Cerrar sesión</button>
+          </div>
+        </div>
+
+        <!-- Vista: reglas -->
+        <div class="form-view" id="vista-reglas">
+          <div class="reglas-content">
+
+            <h3>Descripción general</h3>
+            <p>Quiniela Amigos — Por la Orejona es un predictor privado para la fase de liga y eliminatorias de la Champions League 2026-27, desde el arranque de la fase de liga (8 de septiembre de 2026) hasta la Final (5 de junio de 2027, Estadio Metropolitano, Madrid). No incluye las rondas de clasificación previas al sorteo del 27 de agosto de 2026.</p>
+            <p>La participación tiene un costo de inscripción de <strong>$400 MXN</strong> por persona y está abierta a los invitados por el administrador. El registro requiere verificar tu correo antes de quedar activo.</p>
+
+            <h3>Mecánica de juego</h3>
+            <p>Se pronostica el marcador exacto de cada uno de los 144 partidos de la fase de liga, más todos los partidos de playoffs, octavos, cuartos, semifinal y final. Cada partido de ida y vuelta se pronostica y puntúa por separado, nunca el marcador global de la eliminatoria.</p>
+            <p>El sistema cierra la captura una hora antes de cada partido. Puedes modificar tu pronóstico cuantas veces quieras antes del cierre.</p>
+            <p>Los resultados se toman al término de los 90 minutos reglamentarios de cada partido. El tiempo extra y los penales no cuentan para la puntuación, incluso en los partidos de vuelta de la fase eliminatoria que puedan llegar a tiempo extra por marcador global empatado.</p>
+            <p>Esta temporada no hay elección de "campeón" al registrarte ni bono asociado.</p>
+
+            <h3>Sistema de puntuación</h3>
+            <div class="tabla-wrap">
+              <table>
+                <tr><th>Concepto</th><th>Puntos</th></tr>
+                <tr><td>Marcador exacto</td><td class="num">3 pts</td></tr>
+                <tr><td>Resultado correcto (ganador o empate)</td><td class="num">1 pt</td></tr>
+              </table>
+            </div>
+            <p>Multiplicador por fase, aplicado partido por partido sobre los puntos anteriores:</p>
+            <div class="tabla-wrap">
+              <table>
+                <tr><th>Fase</th><th>Multiplicador</th></tr>
+                <tr><td>Fase de liga</td><td class="num">×1</td></tr>
+                <tr><td>Playoffs</td><td class="num">×1</td></tr>
+                <tr><td>Octavos de final</td><td class="num">×2</td></tr>
+                <tr><td>Cuartos de final</td><td class="num">×3</td></tr>
+                <tr><td>Semifinal</td><td class="num">×4</td></tr>
+                <tr><td>Final</td><td class="num">×5</td></tr>
+              </table>
+            </div>
+            <p>En caso de empate entre participantes al final del torneo, el desempate se resuelve así: 1) mayor número de marcadores exactos, 2) mayor número de resultados correctos. Si el empate persiste, los participantes comparten en partes iguales el premio del lugar en disputa, sin afectar los premios de los demás lugares.</p>
+
+            <h3>Modelo de pago</h3>
+            <p>Puedes registrarte y pronosticar sin haber pagado, pero solo se guardan pronósticos de la jornada 1. Para desbloquear la jornada 2 en adelante, debes completar tu pago.</p>
+            <p>Quien no haya pagado al iniciar el torneo queda deshabilitado: no puede seguir pronosticando y no cuenta para ranking ni premios. Puedes regularizarte con un pago extemporáneo. Los pronósticos ya guardados antes del cierre de cada partido cuentan, aunque el partido se haya jugado mientras estabas deshabilitado.</p>
+            <p>El pago se realiza en efectivo o mediante retiro sin tarjeta: generas una clave de retiro desde tu app bancaria por el monto exacto de $400 MXN y la envías al correo de contacto. No se aceptan transferencias, depósitos ni otros medios.</p>
+
+            <h3>Premios y distribución</h3>
+            <p>El Premio Acumulado se forma con la suma de todas las inscripciones. El 30% es para el administrador (incluye gastos de operación). El 70% restante se reparte así:</p>
+            <div class="tabla-wrap">
+              <table>
+                <tr><th>Lugar</th><th>% del 70% restante</th></tr>
+                <tr><td>1° lugar</td><td class="num">50%</td></tr>
+                <tr><td>2° lugar</td><td class="num">30%</td></tr>
+                <tr><td>3° lugar</td><td class="num">20%</td></tr>
+              </table>
+            </div>
+            <p>Los premios se entregan en efectivo dentro de los 7 días naturales siguientes a la conclusión del torneo.</p>
+
+            <h3>Cancelación y caso fortuito</h3>
+            <p>El administrador se reserva el derecho de cancelar, suspender o modificar la quiniela por fuerza mayor, caso fortuito, cancelación del torneo por la UEFA, o cualquier circunstancia ajena a su control. En cancelación total antes del inicio de la fase de liga, se reembolsa íntegramente la inscripción. En cancelación parcial ya iniciado el torneo, el administrador determina la distribución del Premio Acumulado de forma proporcional y equitativa, comunicándolo oportunamente.</p>
+
+            <p class="contacto">Dudas, aclaraciones o envío de pago: avisos.quiniela@gmail.com<br>Al registrarte, declaras haber leído y aceptado en su totalidad estas reglas.</p>
+
           </div>
         </div>
 
@@ -591,13 +720,12 @@
           deshabilitado: 'Tu cuenta está deshabilitada por falta de pago. Contacta a Harry para regularizarte.'
         };
         document.getElementById('estado-pago-texto').textContent = textoPago[datos.estadoPago] || '';
-        document.getElementById('tabs').style.display = 'none';
+        tabs.forEach(function(t){ t.classList.remove('active'); });
         mostrarVista('vista-autenticado');
       }
 
       document.getElementById('btn-salir').addEventListener('click', function(){
         localStorage.removeItem(CLAVE_STORAGE);
-        document.getElementById('tabs').style.display = 'flex';
         activarTab('vista-login');
       });
 
