@@ -438,6 +438,41 @@
     padding-top: 14px;
     border-top: 1px solid var(--border-2);
   }
+
+  /* ---------- Inscritos ---------- */
+
+  .inscritos-content h2{
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+    color: var(--text);
+  }
+
+  .inscritos-conteo{
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-3);
+    margin: 0 0 18px;
+  }
+
+  .inscritos-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
+  .inscritos-list li{
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--border-2);
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .inscritos-list li:last-child{ border-bottom: none; }
 </style>
 </head>
 <body>
@@ -456,9 +491,10 @@
 
       <!-- Tabs -->
       <div class="tabs" id="tabs">
+        <button class="tab" data-target="vista-reglas" type="button">Reglas</button>
         <button class="tab active" data-target="vista-registro" type="button">Registrarme</button>
         <button class="tab" data-target="vista-login" type="button">Ya tengo cuenta</button>
-        <button class="tab" data-target="vista-reglas" type="button">Reglas</button>
+        <button class="tab" data-target="vista-inscritos" type="button" id="tab-inscritos">Inscritos</button>
       </div>
 
       <div class="form-body">
@@ -472,7 +508,7 @@
             </div>
             <div class="campo">
               <label for="reg-username">Nombre de usuario (así te verán los demás)</label>
-              <input type="text" id="reg-username" autocomplete="off" minlength="3" maxlength="20" pattern="[a-z0-9_]{3,20}" placeholder="minúsculas, números y _" required>
+              <input type="text" id="reg-username" autocomplete="off" minlength="3" maxlength="20" pattern="[a-z0-9]{3,20}" placeholder="solo minúsculas y números" required>
             </div>
             <div class="campo">
               <label for="reg-correo">Correo</label>
@@ -582,6 +618,16 @@
           </div>
         </div>
 
+        <!-- Vista: inscritos -->
+        <div class="form-view" id="vista-inscritos">
+          <div class="inscritos-content">
+            <h2 id="inscritos-titulo">Inscritos</h2>
+            <p class="inscritos-conteo" id="inscritos-conteo">Cargando…</p>
+            <ul class="inscritos-list" id="inscritos-list"></ul>
+            <div class="mensaje" id="mensaje-inscritos"></div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -593,10 +639,12 @@
       var SLUG_TENANT = 'amigos';
       var URL_REGISTRO = 'https://registrarusuario-guv46sjobq-uc.a.run.app';
       var URL_LOGIN = 'https://login-guv46sjobq-uc.a.run.app';
+      var URL_INSCRITOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getInscritos';
       var CLAVE_STORAGE = 'quiniela_sesion';
 
       var tabs = document.querySelectorAll('.tab');
       var vistas = document.querySelectorAll('.form-view');
+      var inscritosCargados = false;
 
       function mostrarVista(id){
         vistas.forEach(function(v){ v.classList.remove('active'); });
@@ -608,6 +656,9 @@
           t.classList.toggle('active', t.dataset.target === target);
         });
         mostrarVista(target);
+        if (target === 'vista-inscritos' && !inscritosCargados){
+          cargarInscritos();
+        }
       }
 
       tabs.forEach(function(tab){
@@ -645,8 +696,8 @@
           mostrarMensaje('mensaje-registro', 'Completa todos los campos.', 'error');
           return;
         }
-        if (!/^[a-z0-9_]{3,20}$/.test(username)){
-          mostrarMensaje('mensaje-registro', 'El nombre de usuario debe tener entre 3 y 20 caracteres: minúsculas, números y guión bajo.', 'error');
+        if (!/^[a-z0-9]{3,20}$/.test(username)){
+          mostrarMensaje('mensaje-registro', 'El nombre de usuario debe tener entre 3 y 20 caracteres: solo minúsculas y números, sin espacios ni símbolos.', 'error');
           return;
         }
         if (password.length < 8){
@@ -724,6 +775,43 @@
             btnLogin.textContent = 'Iniciar sesión';
           });
       });
+
+      // ---------- Inscritos ----------
+      function cargarInscritos(){
+        var lista = document.getElementById('inscritos-list');
+        var conteo = document.getElementById('inscritos-conteo');
+        var titulo = document.getElementById('inscritos-titulo');
+
+        fetch(URL_INSCRITOS + '?slug=' + encodeURIComponent(SLUG_TENANT))
+          .then(function(resp){
+            return resp.json().then(function(data){ return {status: resp.status, data: data}; });
+          })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              inscritosCargados = true;
+              var nombreTab = res.data.torneoIniciado ? 'Posiciones' : 'Inscritos';
+              titulo.textContent = nombreTab;
+              document.getElementById('tab-inscritos').textContent = nombreTab;
+
+              var inscritos = res.data.inscritos || [];
+              conteo.textContent = inscritos.length + (inscritos.length === 1 ? ' inscrito' : ' inscritos');
+
+              lista.innerHTML = '';
+              inscritos.forEach(function(username){
+                var li = document.createElement('li');
+                li.textContent = username;
+                lista.appendChild(li);
+              });
+            } else {
+              mostrarMensaje('mensaje-inscritos', res.data.error || 'No se pudo cargar la lista.', 'error');
+              conteo.textContent = '';
+            }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-inscritos', 'No pudimos conectar con el servidor.', 'error');
+            conteo.textContent = '';
+          });
+      }
 
       // ---------- Sesión ----------
       function guardarSesion(datos){
