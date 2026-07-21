@@ -471,6 +471,10 @@
               <input type="text" id="reg-nombre" autocomplete="name" required>
             </div>
             <div class="campo">
+              <label for="reg-username">Nombre de usuario (así te verán los demás)</label>
+              <input type="text" id="reg-username" autocomplete="off" minlength="3" maxlength="20" pattern="[a-z0-9_]{3,20}" placeholder="minúsculas, números y _" required>
+            </div>
+            <div class="campo">
               <label for="reg-correo">Correo</label>
               <input type="email" id="reg-correo" autocomplete="email" required>
             </div>
@@ -504,7 +508,7 @@
           <div class="aviso-correo">
             <div class="icono">✉</div>
             <h2>Revisa tu correo</h2>
-            <p>Te mandamos un link para confirmar tu cuenta. Puede tardar unos minutos y a veces cae en spam. El link es válido por 48 horas.</p>
+            <p>Te mandamos un link para confirmar tu cuenta. Puede tardar unos minutos y a veces cae en spam. El link es válido por 8 horas.</p>
           </div>
         </div>
 
@@ -633,11 +637,16 @@
         limpiarMensaje('mensaje-registro');
 
         var nombre = document.getElementById('reg-nombre').value.trim();
+        var username = document.getElementById('reg-username').value.trim().toLowerCase();
         var correo = document.getElementById('reg-correo').value.trim();
         var password = document.getElementById('reg-password').value;
 
-        if (!nombre || !correo || !password){
+        if (!nombre || !username || !correo || !password){
           mostrarMensaje('mensaje-registro', 'Completa todos los campos.', 'error');
+          return;
+        }
+        if (!/^[a-z0-9_]{3,20}$/.test(username)){
+          mostrarMensaje('mensaje-registro', 'El nombre de usuario debe tener entre 3 y 20 caracteres: minúsculas, números y guión bajo.', 'error');
           return;
         }
         if (password.length < 8){
@@ -651,7 +660,7 @@
         fetch(URL_REGISTRO, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({slug: SLUG_TENANT, nombre: nombre, correo: correo, password: password})
+          body: JSON.stringify({slug: SLUG_TENANT, nombre: nombre, username: username, correo: correo, password: password})
         })
           .then(function(resp){
             return resp.json().then(function(data){ return {status: resp.status, data: data}; });
