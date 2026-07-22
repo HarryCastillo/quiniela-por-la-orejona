@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ops — Quiniela Amigos, Por la Orejona</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0d0d0d; --panel-1: #161616; --panel-2: #1a1a1a;
+    --text: #f0f0f0; --text-2: #aaa; --text-3: #888;
+    --border-1: #444; --border-2: #333;
+    --green: #00c06b; --green-dark: #009952; --green-light: #48c78e;
+    --gold: #f5c518; --error: #e63329;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font-family: 'Work Sans', sans-serif; padding: 24px;
+  }
+  .wrap{ max-width: 720px; margin: 0 auto; }
+  .eyebrow{
+    font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.24em;
+    text-transform: uppercase; color: var(--green); margin: 0 0 6px;
+  }
+  h1{
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 32px;
+    text-transform: uppercase; margin: 0 0 24px; letter-spacing: 0.01em;
+  }
+  h2{
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 18px;
+    text-transform: uppercase; margin: 0 0 14px; color: var(--text);
+  }
+  .card{
+    background: var(--panel-1); border: 1px solid var(--border-2);
+    border-radius: 12px; padding: 22px; margin-bottom: 18px;
+  }
+  .campo{ margin-bottom: 14px; }
+  .campo label{
+    display: block; font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3);
+    margin-bottom: 6px;
+  }
+  .campo input, .campo select{
+    width: 100%; background: var(--panel-2); border: 1px solid var(--border-1);
+    color: var(--text); font-family: 'Work Sans', sans-serif; font-size: 15px;
+    padding: 10px 12px; border-radius: 8px; outline: none;
+  }
+  .campo input:focus, .campo select:focus{ border-color: var(--green); }
+  .fila-2{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn{
+    font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.05em;
+    text-transform: uppercase; border: none; border-radius: 8px; padding: 12px 20px;
+    cursor: pointer; transition: opacity 0.15s ease;
+  }
+  .btn:disabled{ opacity: 0.4; cursor: not-allowed; }
+  .btn-verde{ background: var(--green); color: var(--bg); font-weight: 700; }
+  .btn-verde:hover:not(:disabled){ background: var(--green-dark); }
+  .btn-dorado{ background: var(--gold); color: var(--bg); font-weight: 700; }
+  .btn-dorado:hover:not(:disabled){ opacity: 0.85; }
+  .btn-fantasma{
+    background: transparent; color: var(--text-2); border: 1px solid var(--border-1);
+  }
+  .btn-fantasma:hover:not(:disabled){ color: var(--text); border-color: var(--text-2); }
+
+  .lista-partidos{ display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; }
+  .partido-item{
+    background: var(--panel-2); border: 1px solid var(--border-2); border-radius: 8px;
+    padding: 12px 14px; cursor: pointer; transition: border-color 0.15s ease;
+  }
+  .partido-item:hover{ border-color: var(--green); }
+  .partido-item.selected{ border-color: var(--green); background: rgba(0,192,107,0.06); }
+  .partido-meta{ font-size: 11px; color: var(--text-3); font-family: 'Space Mono', monospace; margin-bottom: 4px; }
+  .partido-equipos{ font-size: 14px; font-weight: 600; }
+
+  .seleccionado-banner{
+    background: rgba(0,192,107,0.06); border: 1px solid rgba(0,192,107,0.3);
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px;
+  }
+  .seleccionado-banner strong{ color: var(--green-light); }
+
+  table{ width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  th{
+    text-align: left; padding: 8px 10px; color: var(--text-3); font-weight: 500;
+    border-bottom: 1px solid var(--border-1); font-family: 'Space Mono', monospace;
+    font-size: 11px; text-transform: uppercase;
+  }
+  td{ padding: 9px 10px; border-bottom: 1px solid var(--border-2); }
+  .tag-exacto{ background: rgba(245,197,24,0.2); color: var(--gold); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .tag-correcto{ background: rgba(72,199,142,0.2); color: var(--green-light); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .tag-fallo{ color: var(--text-3); font-size: 11px; }
+  .resumen-stats{ display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+  .resumen-stat{ background: var(--panel-2); border-radius: 8px; padding: 8px 14px; font-size: 12px; color: var(--text-3); }
+  .resumen-stat strong{ display: block; font-family: 'Anton', sans-serif; font-size: 20px; color: var(--green-light); }
+
+  .aviso-irreversible{
+    background: rgba(230,51,41,0.08); border: 1px solid rgba(230,51,41,0.3);
+    border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--text-2);
+    margin-top: 14px; line-height: 1.5;
+  }
+  .aviso-irreversible strong{ color: var(--error); }
+
+  .mensaje{ font-family: 'Space Mono', monospace; font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-top: 10px; display: none; }
+  .mensaje.error{ display: block; background: rgba(230,51,41,0.1); border: 1px solid var(--error); color: #ff8079; }
+  .mensaje.exito{ display: block; background: rgba(0,192,107,0.1); border: 1px solid var(--green); color: var(--green-light); }
+
+  .oculto{ display: none !important; }
+  .empty-state{ text-align: center; padding: 32px 16px; color: var(--text-3); font-size: 13px; }
+  .loading{ text-align: center; padding: 24px 0; color: var(--text-3); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Quiniela Amigos · Panel interno</p>
+  <h1>Capturar resultados</h1>
+
+  <!-- Compuerta de acceso -->
+  <div class="card" id="card-acceso">
+    <h2>Acceso</h2>
+    <div class="campo">
+      <label>Secreto de admin</label>
+      <input type="password" id="adminSecret" placeholder="ADMIN_SECRET_CHAMPIONS" autocomplete="off">
+    </div>
+    <button class="btn btn-verde" id="btnEntrar">Entrar</button>
+    <div class="mensaje" id="mensajeAcceso"></div>
+  </div>
+
+  <!-- Panel principal -->
+  <div id="panelPrincipal" class="oculto">
+
+    <div class="card">
+      <h2>Partidos pendientes de resultado</h2>
+      <div id="listaPartidos"><div class="loading">Cargando partidos...</div></div>
+    </div>
+
+    <div class="card oculto" id="cardCaptura">
+      <h2>Capturar resultado</h2>
+      <div class="seleccionado-banner" id="bannerSeleccionado"></div>
+      <div class="fila-2">
+        <div class="campo">
+          <label id="labelLocal">Goles local</label>
+          <input type="number" id="golesLocal" min="0" max="30" placeholder="0">
+        </div>
+        <div class="campo">
+          <label id="labelVisitante">Goles visitante</label>
+          <input type="number" id="golesVisitante" min="0" max="30" placeholder="0">
+        </div>
+      </div>
+      <button class="btn btn-verde" id="btnPrevisualizar">Previsualizar puntos</button>
+      <button class="btn btn-fantasma" id="btnCancelarSeleccion" style="margin-left:8px">Cancelar</button>
+      <div class="mensaje" id="mensajeCaptura"></div>
+    </div>
+
+    <div class="card oculto" id="cardPreview">
+      <h2>Previsualización — nada se ha aplicado todavía</h2>
+      <div id="resumenPreview"></div>
+      <div style="max-height:280px;overflow-y:auto">
+        <table>
+          <thead><tr><th>Participante</th><th>Pronóstico</th><th>Resultado</th><th>Pts</th></tr></thead>
+          <tbody id="tablaPreview"></tbody>
+        </table>
+      </div>
+      <div class="aviso-irreversible">
+        <strong>Esto es irreversible.</strong> Al confirmar se suman los puntos a cada participante
+        y el partido queda marcado como cerrado. Revisa el resultado con cuidado antes de aplicar.
+      </div>
+      <div style="margin-top:14px">
+        <button class="btn btn-dorado" id="btnConfirmar">Confirmar y aplicar</button>
+        <button class="btn btn-fantasma" id="btnDescartarPreview" style="margin-left:8px">Descartar</button>
+      </div>
+      <div class="mensaje" id="mensajeConfirmar"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  // --- Rellenar con las URLs reales despues de desplegar cada función ---
+  var SLUG_TENANT = 'amigos';
+  var URL_GET_PARTIDOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPartidos';
+  var URL_PREVISUALIZAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/previsualizarResultado';
+  var URL_CONFIRMAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/confirmarResultado';
+  var CLAVE_SESION = 'ops_orejona_admin_secret';
+
+  var adminSecret = sessionStorage.getItem(CLAVE_SESION) || '';
+  var partidoSeleccionado = null;
+  var previewActual = null; // { partidoId, golesLocal, golesVisitante }
+
+  function mostrarMensaje(id, texto, tipo){
+    var el = document.getElementById(id);
+    el.textContent = texto;
+    el.className = 'mensaje ' + tipo;
+  }
+  function limpiarMensaje(id){
+    var el = document.getElementById(id);
+    el.textContent = ''; el.className = 'mensaje';
+  }
+
+  if (adminSecret) mostrarPanelPrincipal();
+
+  document.getElementById('btnEntrar').addEventListener('click', function(){
+    var valor = document.getElementById('adminSecret').value.trim();
+    if (!valor){ mostrarMensaje('mensajeAcceso', 'Ingresa el secreto', 'error'); return; }
+    adminSecret = valor;
+    sessionStorage.setItem(CLAVE_SESION, adminSecret);
+    mostrarPanelPrincipal();
+  });
+
+  function mostrarPanelPrincipal(){
+    document.getElementById('card-acceso').classList.add('oculto');
+    document.getElementById('panelPrincipal').classList.remove('oculto');
+    cargarPartidos();
+  }
+
+  function nombrePartido(p){
+    var local = p.local || 'Por definir';
+    var visitante = p.visitante || 'Por definir';
+    return local + ' vs ' + visitante;
+  }
+
+  function metaPartido(p){
+    var partes = [p.fase];
+    if (p.jornada) partes.push('J' + p.jornada);
+    if (p.ronda) partes.push(p.ronda);
+    return partes.join(' · ');
+  }
+
+  function cargarPartidos(){
+    var cont = document.getElementById('listaPartidos');
+    cont.innerHTML = '<div class="loading">Cargando partidos...</div>';
+    fetch(URL_GET_PARTIDOS + '?slug=' + encodeURIComponent(SLUG_TENANT))
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (!data.ok){ cont.innerHTML = '<div class="empty-state">Error al cargar partidos.</div>'; return; }
+        var pendientes = (data.partidos || []).filter(function(p){
+          return !p.resultadoCapturado && p.local && p.visitante;
+        });
+        if (!pendientes.length){
+          cont.innerHTML = '<div class="empty-state">No hay partidos con equipos definidos y sin resultado todavía.</div>';
+          return;
+        }
+        cont.innerHTML = '<div class="lista-partidos">' + pendientes.map(function(p){
+          return '<div class="partido-item" data-id="' + p.id + '">' +
+            '<div class="partido-meta">' + metaPartido(p) + '</div>' +
+            '<div class="partido-equipos">' + nombrePartido(p) + '</div>' +
+          '</div>';
+        }).join('') + '</div>';
+
+        document.querySelectorAll('.partido-item').forEach(function(el){
+          el.addEventListener('click', function(){
+            var partido = pendientes.find(function(p){ return p.id === el.dataset.id; });
+            seleccionarPartido(partido, el);
+          });
+        });
+      })
+      .catch(function(){ cont.innerHTML = '<div class="empty-state">No se pudo conectar con el servidor.</div>'; });
+  }
+
+  function seleccionarPartido(partido, el){
+    partidoSeleccionado = partido;
+    document.querySelectorAll('.partido-item').forEach(function(e){ e.classList.remove('selected'); });
+    el.classList.add('selected');
+
+    document.getElementById('cardCaptura').classList.remove('oculto');
+    document.getElementById('cardPreview').classList.add('oculto');
+    document.getElementById('bannerSeleccionado').innerHTML =
+      '<strong>' + nombrePartido(partido) + '</strong> — ' + metaPartido(partido);
+    document.getElementById('labelLocal').textContent = 'Goles ' + (partido.local || 'local');
+    document.getElementById('labelVisitante').textContent = 'Goles ' + (partido.visitante || 'visitante');
+    document.getElementById('golesLocal').value = '';
+    document.getElementById('golesVisitante').value = '';
+    limpiarMensaje('mensajeCaptura');
+    document.getElementById('cardCaptura').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  document.getElementById('btnCancelarSeleccion').addEventListener('click', function(){
+    partidoSeleccionado = null;
+    document.getElementById('cardCaptura').classList.add('oculto');
+    document.getElementById('cardPreview').classList.add('oculto');
+    document.querySelectorAll('.partido-item').forEach(function(e){ e.classList.remove('selected'); });
+  });
+
+  document.getElementById('btnPrevisualizar').addEventListener('click', function(){
+    limpiarMensaje('mensajeCaptura');
+    if (!partidoSeleccionado){ mostrarMensaje('mensajeCaptura', 'Selecciona un partido', 'error'); return; }
+    var gl = document.getElementById('golesLocal').value;
+    var gv = document.getElementById('golesVisitante').value;
+    if (gl === '' || gv === ''){ mostrarMensaje('mensajeCaptura', 'Ingresa el marcador completo', 'error'); return; }
+
+    var btn = this;
+    btn.disabled = true; btn.textContent = 'Calculando...';
+
+    fetch(URL_PREVISUALIZAR, {
+      method: 'POST',
+      body: JSON.stringify({
+        adminSecret: adminSecret, slug: SLUG_TENANT, partidoId: partidoSeleccionado.id,
+        golesLocal: Number(gl), golesVisitante: Number(gv)
+      })
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        btn.disabled = false; btn.textContent = 'Previsualizar puntos';
+        if (!data.ok){
+          if (String(data.error||'').indexOf('autorizado') !== -1){
+            sessionStorage.removeItem(CLAVE_SESION);
+            mostrarMensaje('mensajeCaptura', 'Secreto incorrecto. Vuelve a entrar.', 'error');
+            document.getElementById('panelPrincipal').classList.add('oculto');
+            document.getElementById('card-acceso').classList.remove('oculto');
+            return;
+          }
+          mostrarMensaje('mensajeCaptura', data.error || 'Error al previsualizar', 'error');
+          return;
+        }
+        previewActual = { partidoId: partidoSeleccionado.id, golesLocal: Number(gl), golesVisitante: Number(gv) };
+        mostrarPreview(data);
+      })
+      .catch(function(){ btn.disabled = false; btn.textContent = 'Previsualizar puntos'; mostrarMensaje('mensajeCaptura', 'Error de conexión', 'error'); });
+  });
+
+  function mostrarPreview(data){
+    document.getElementById('cardPreview').classList.remove('oculto');
+    limpiarMensaje('mensajeConfirmar');
+    var correctosSolos = data.correctos - data.exactos;
+    document.getElementById('resumenPreview').innerHTML =
+      '<p style="font-size:14px;color:var(--text-2)">Resultado a capturar: <strong style="color:var(--text)">' +
+      data.resultado + '</strong> — ' + data.partido.local + ' vs ' + data.partido.visitante +
+      ' (' + data.partido.fase + ', ×' + data.partido.multiplicador + ')</p>' +
+      '<div class="resumen-stats">' +
+        '<div class="resumen-stat"><strong>' + data.totalPronosticos + '</strong>Pronósticos</div>' +
+        '<div class="resumen-stat"><strong>' + data.exactos + '</strong>Exactos</div>' +
+        '<div class="resumen-stat"><strong>' + correctosSolos + '</strong>Correctos</div>' +
+      '</div>';
+
+    document.getElementById('tablaPreview').innerHTML = data.detalle.map(function(f){
+      var tag = f.exacto ? '<span class="tag-exacto">⭐ Exacto</span>'
+        : f.correcto ? '<span class="tag-correcto">✓ Correcto</span>'
+        : '<span class="tag-fallo">—</span>';
+      return '<tr><td>' + f.usuarioId + '</td><td>' + f.pronostico + '</td><td>' + tag + '</td><td>+' + f.puntos + '</td></tr>';
+    }).join('');
+
+    document.getElementById('cardPreview').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  document.getElementById('btnDescartarPreview').addEventListener('click', function(){
+    previewActual = null;
+    document.getElementById('cardPreview').classList.add('oculto');
+  });
+
+  document.getElementById('btnConfirmar').addEventListener('click', function(){
+    if (!previewActual){ return; }
+    var btn = this;
+    btn.disabled = true; btn.textContent = 'Aplicando...';
+    limpiarMensaje('mensajeConfirmar');
+
+    fetch(URL_CONFIRMAR, {
+      method: 'POST',
+      body: JSON.stringify({
+        adminSecret: adminSecret, slug: SLUG_TENANT, confirmar: true,
+        partidoId: previewActual.partidoId,
+        golesLocal: previewActual.golesLocal, golesVisitante: previewActual.golesVisitante
+      })
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        btn.disabled = false; btn.textContent = 'Confirmar y aplicar';
+        if (!data.ok){ mostrarMensaje('mensajeConfirmar', data.error || 'Error al aplicar', 'error'); return; }
+        mostrarMensaje('mensajeConfirmar', data.mensaje, 'exito');
+        setTimeout(function(){
+          document.getElementById('cardPreview').classList.add('oculto');
+          document.getElementById('cardCaptura').classList.add('oculto');
+          previewActual = null; partidoSeleccionado = null;
+          cargarPartidos();
+        }, 1800);
+      })
+      .catch(function(){ btn.disabled = false; btn.textContent = 'Confirmar y aplicar'; mostrarMensaje('mensajeConfirmar', 'Error de conexión', 'error'); });
+  });
+
+})();
+</script>
+</body>
+</html>
