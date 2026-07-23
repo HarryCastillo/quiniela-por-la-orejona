@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ops — Quiniela Amigos, Por la Orejona</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -472,6 +473,7 @@
 
     fetch(URL_PREVISUALIZAR, {
       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         adminSecret: adminSecret, slug: SLUG_TENANT, partidoId: partidoSeleccionado.id,
         golesLocal: Number(gl), golesVisitante: Number(gv)
@@ -534,6 +536,7 @@
 
     fetch(URL_CONFIRMAR, {
       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         adminSecret: adminSecret, slug: SLUG_TENANT, confirmar: true,
         partidoId: previewActual.partidoId,
@@ -564,7 +567,11 @@
 
   function apiPostAdmin(url, extra){
     var body = Object.assign({adminSecret: adminSecret, slug: SLUG_TENANT}, extra);
-    return fetch(url, {method: 'POST', body: JSON.stringify(body)})
+    return fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    })
       .then(function(r){ return r.json(); });
   }
 
