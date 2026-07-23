@@ -636,7 +636,9 @@
 
   <script>
     (function(){
-      var SLUG_TENANT = 'amigos';
+      // Tenant por hash de URL (#demo, #amigos, etc). Sin hash, cae en
+      // "amigos" — el link de siempre para participantes reales no cambia.
+      var SLUG_TENANT = (window.location.hash || '').replace('#', '').trim() || 'amigos';
       var URL_REGISTRO = 'https://registrarusuario-guv46sjobq-uc.a.run.app';
       var URL_LOGIN = 'https://login-guv46sjobq-uc.a.run.app';
       var URL_INSCRITOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getInscritos';
