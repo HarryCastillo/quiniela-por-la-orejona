@@ -827,6 +827,98 @@
       padding-left: 30px;
     }
   }
+
+  .pos-row{ cursor: pointer; }
+  .pos-row:hover .pos-nombre{ text-decoration: underline; text-decoration-color: var(--green); }
+
+  /* ---------- Modal desglose participante ---------- */
+
+  .modal-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .modal-overlay.open{ display: flex; }
+
+  .modal-box{
+    background: var(--panel-1);
+    border: 1px solid var(--border-1);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 640px;
+    margin: auto;
+    padding: 22px;
+    position: relative;
+  }
+
+  .modal-close{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+  }
+
+  .modal-header{ margin-bottom: 16px; padding-right: 30px; }
+
+  .modal-nombre{
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+
+  .modal-stats{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .modal-stat{
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: var(--text-3);
+  }
+
+  .modal-stat strong{
+    color: var(--green);
+    font-size: 16px;
+    display: block;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .desglose-tabla{ width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .desglose-tabla th{ text-align: left; padding: 7px 8px; color: var(--text-3); font-weight: 500; border-bottom: 1px solid var(--border-2); }
+  .desglose-tabla td{ padding: 8px; border-bottom: 1px solid var(--border-2); color: var(--text); }
+  .desglose-tabla tr:last-child td{ border-bottom: none; }
+  .desglose-tabla tr.exacto td{ background: rgba(245,197,24,0.06); }
+  .desglose-tabla tr.correcto td{ background: rgba(72,199,142,0.05); }
+
+  .tag-exacto{ background: rgba(245,197,24,0.2); color: var(--gold); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .tag-correcto{ background: rgba(72,199,142,0.2); color: var(--green-light); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+  .tag-fallo{ color: var(--text-3); font-size: 11px; }
+
+  @media (max-width: 480px){
+    .modal-box{ padding: 16px; border-radius: 12px; }
+    .modal-nombre{ font-size: 19px; }
+    .desglose-tabla{ font-size: 11.5px; }
+    .desglose-tabla th, .desglose-tabla td{ padding: 6px 5px; }
+  }
 </style>
 </head>
 <body>
@@ -994,6 +1086,13 @@
 
   <div class="toast" id="toast"></div>
 
+  <div class="modal-overlay" id="modalDesglose">
+    <div class="modal-box">
+      <button class="modal-close" id="btnCerrarDesglose">✕</button>
+      <div id="desgloseContenido"></div>
+    </div>
+  </div>
+
   <script>
     (function(){
       // Tenant por hash de URL (#demo, #amigos, etc). Sin hash, cae en
@@ -1005,6 +1104,7 @@
       var URL_POSICIONES = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPosiciones';
       var URL_PARTIDOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPartidos';
       var URL_MIS_PRONOSTICOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/misPronosticos';
+      var URL_DESGLOSE = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/desgloseParticipante';
       var URL_GUARDAR_PRONOSTICO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/guardarPronostico';
       var CLAVE_STORAGE = 'quiniela_sesion';
 
@@ -1206,10 +1306,12 @@
               var claseMedalla = p.lugar === 1 ? 'oro' : p.lugar === 2 ? 'plata' : p.lugar === 3 ? 'bronce' : '';
               var li = document.createElement('li');
               li.className = 'pos-row';
+              li.title = 'Ver pronósticos de ' + p.username;
               li.innerHTML =
                 '<span class="pos-lugar ' + claseMedalla + '">' + p.lugar + '</span>' +
                 '<span class="pos-nombre">' + p.username + '</span>' +
                 '<span class="pos-stats">' + p.puntos + ' pts &middot; ' + p.exactos + ' exactos &middot; ' + p.correctos + ' correctos</span>';
+              li.addEventListener('click', function(){ abrirDesglose(p.usuarioId); });
               lista.appendChild(li);
             });
           })
@@ -1218,6 +1320,86 @@
             conteo.textContent = '';
           });
       }
+
+      // ---------- Desglose participante ----------
+      function abrirDesglose(usuarioId){
+        var sesion = obtenerSesion();
+        if (!sesion || !sesion.token){
+          mostrarToast('Inicia sesión para ver el desglose', 'err');
+          return;
+        }
+        var overlay = document.getElementById('modalDesglose');
+        var contenido = document.getElementById('desgloseContenido');
+        contenido.innerHTML = '<div class="loading"><div class="spinner"></div>Cargando…</div>';
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+
+        fetch(URL_DESGLOSE, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({token: sesion.token, usuarioIdConsultado: usuarioId})
+        })
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            if (!data.ok){
+              contenido.innerHTML = '<p style="color:var(--error)">' + (data.error || 'Error al cargar') + '</p>';
+              return;
+            }
+            var correctosSolos = (data.correctos || 0) - (data.exactos || 0);
+            var html =
+              '<div class="modal-header">' +
+                '<div class="modal-nombre">' + data.username + '</div>' +
+                '<div class="modal-stats">' +
+                  '<div class="modal-stat"><strong>' + (data.puntos || 0) + '</strong>Puntos</div>' +
+                  '<div class="modal-stat"><strong>' + (data.exactos || 0) + '</strong>Exactos</div>' +
+                  '<div class="modal-stat"><strong>' + correctosSolos + '</strong>Correctos</div>' +
+                '</div>' +
+              '</div>';
+
+            var filas = data.filas || [];
+            if (!filas.length){
+              html += '<p style="color:var(--text-3);font-size:13px;margin-top:8px">Aún no hay partidos terminados.</p>';
+            } else {
+              html += '<table class="desglose-tabla"><thead><tr>' +
+                '<th>Partido</th><th style="text-align:center">Real</th>' +
+                '<th style="text-align:center">Pronóstico</th>' +
+                '<th style="text-align:center">Resultado</th>' +
+                '<th style="text-align:center">Pts</th>' +
+                '</tr></thead><tbody>';
+
+              filas.slice().reverse().forEach(function(f){
+                var rowClass = f.exacto ? 'exacto' : f.correcto ? 'correcto' : '';
+                var tag = f.exacto ? '<span class="tag-exacto">⭐ Exacto</span>'
+                  : f.correcto ? '<span class="tag-correcto">✓ Correcto</span>'
+                  : '<span class="tag-fallo">—</span>';
+                html += '<tr class="' + rowClass + '">' +
+                  '<td><div style="font-weight:500">' + f.partido + '</div>' +
+                  '<div style="font-size:11px;color:var(--text-3)">' + f.fase + '</div></td>' +
+                  '<td style="text-align:center;font-family:\'Space Mono\',monospace">' + f.resultado + '</td>' +
+                  '<td style="text-align:center;font-family:\'Space Mono\',monospace">' + f.pronostico + '</td>' +
+                  '<td style="text-align:center">' + tag + '</td>' +
+                  '<td style="text-align:center">+' + f.puntos + '</td>' +
+                  '</tr>';
+              });
+              html += '</tbody></table>';
+            }
+
+            contenido.innerHTML = html;
+          })
+          .catch(function(){
+            contenido.innerHTML = '<p style="color:var(--error)">Error al cargar. Intenta de nuevo.</p>';
+          });
+      }
+
+      function cerrarDesglose(){
+        document.getElementById('modalDesglose').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      document.getElementById('btnCerrarDesglose').addEventListener('click', cerrarDesglose);
+      document.getElementById('modalDesglose').addEventListener('click', function(e){
+        if (e.target === e.currentTarget) cerrarDesglose();
+      });
 
       // ---------- Partidos ----------
       function cargarPartidos(){
