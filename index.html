@@ -496,6 +496,301 @@
 
   .pos-row:last-child{ border-bottom: none; }
 
+  /* ---------- Partidos ---------- */
+
+  .progreso-banner{
+    background: var(--panel-2);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .progreso-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progreso-label{
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .progreso-count{
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-light);
+  }
+
+  .progreso-count span{ color: var(--text-3); font-weight: 400; font-size: 12px; }
+
+  .progreso-bar-wrap{
+    background: var(--panel-3);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progreso-bar{
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dark), var(--green));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .filtros{
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 16px;
+    padding-bottom: 2px;
+  }
+
+  .filtros::-webkit-scrollbar{ display: none; }
+
+  .filtro-btn{
+    flex: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-1);
+    background: transparent;
+    color: var(--text-3);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .filtro-btn:hover{ border-color: var(--green); color: var(--green-light); }
+
+  .filtro-btn.active{
+    background: var(--green);
+    color: var(--bg);
+    border-color: var(--green);
+    font-weight: 700;
+  }
+
+  .separador-estado{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .separador-estado::before, .separador-estado::after{
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-2);
+  }
+
+  .partido-card{
+    background: var(--panel-2);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s ease;
+  }
+
+  .partido-card:hover{ border-color: var(--border-1); }
+  .partido-card.pronosticado{ border-left: 3px solid var(--green); }
+  .partido-card.cerrado{ opacity: 0.55; }
+
+  .partido-meta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .partido-fase{
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    background: var(--panel-3);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .partido-cierre{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .partido-cierre.urgente{ color: var(--error); }
+
+  .partido-equipos{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .equipo-nombre{ font-weight: 600; font-size: 15px; color: var(--text); }
+  .equipo-local{ text-align: right; }
+  .equipo-visitante{ text-align: left; }
+
+  .vs-badge{
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .resultado-final{
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+  }
+
+  .marcador-inputs{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .stepper{
+    display: flex;
+    align-items: center;
+    background: var(--panel-3);
+    border: 1px solid var(--border-1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .stepper-btn{
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    font-size: 20px;
+    font-weight: 300;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 38px;
+  }
+
+  .stepper-btn:hover{ background: var(--border-2); color: var(--green-light); }
+  .stepper-btn:disabled{ opacity: 0.4; cursor: not-allowed; }
+
+  .stepper-num{
+    flex: 1;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    color: var(--text);
+    padding: 6px 2px;
+  }
+
+  .stepper.guardado{ border-color: var(--green); }
+  .stepper.guardado .stepper-num{ color: var(--green-light); }
+  .stepper.disabled{ opacity: 0.5; }
+
+  .guion{
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    color: var(--text-3);
+  }
+
+  .btn-guardar{
+    width: 100%;
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green-light);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-guardar:hover:not(:disabled){ background: var(--green); color: var(--bg); }
+  .btn-guardar.guardado{ background: var(--green); color: var(--bg); }
+  .btn-guardar:disabled{ opacity: 0.5; cursor: not-allowed; }
+
+  .estado-pago-banner{
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 0 0 16px;
+    border: 1px solid var(--border-2);
+    background: var(--panel-2);
+    color: var(--text-2);
+  }
+
+  .estado-pago-banner.pendiente{ border-color: var(--gold); color: #e8d48a; }
+  .estado-pago-banner.deshabilitado{ border-color: var(--error); color: #ff8079; }
+
+  .loading{ text-align: center; padding: 40px 0; color: var(--text-3); font-size: 13px; }
+
+  .spinner{
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-1);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .toast{
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--panel-1);
+    border: 1px solid var(--border-1);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    max-width: 90vw;
+    transition: transform 0.3s ease;
+    z-index: 999;
+  }
+
+  .toast.visible{ transform: translateX(-50%) translateY(0); }
+  .toast.ok{ border-color: var(--green); color: var(--green-light); }
+  .toast.err{ border-color: var(--error); color: #ff8079; }
+
+  @media (max-width: 480px){
+    .partido-card{ padding: 14px; }
+    .equipo-nombre{ font-size: 13.5px; }
+    .stepper-num{ font-size: 19px; }
+  }
+
   .pos-lugar{
     font-family: 'Space Mono', monospace;
     font-weight: 700;
@@ -611,9 +906,13 @@
         <div class="form-view" id="vista-autenticado">
           <div class="bienvenida">
             <h2 id="saludo-nombre">¡Bienvenido!</h2>
-            <p id="estado-pago-texto"></p>
             <button class="link-salir" id="btn-salir" type="button">Cerrar sesión</button>
           </div>
+          <div class="estado-pago-banner" id="estado-pago-banner" style="display:none"></div>
+          <div id="progresoBanner"></div>
+          <div class="filtros" id="filtros"></div>
+          <div id="listaPartidos"><div class="loading"><div class="spinner"></div>Cargando partidos…</div></div>
+          <div class="mensaje" id="mensaje-partidos"></div>
         </div>
 
         <!-- Vista: reglas -->
@@ -693,6 +992,8 @@
     <div class="status"><span class="dot"></span> Registro abierto</div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
     (function(){
       // Tenant por hash de URL (#demo, #amigos, etc). Sin hash, cae en
@@ -702,11 +1003,19 @@
       var URL_LOGIN = 'https://login-guv46sjobq-uc.a.run.app';
       var URL_INSCRITOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getInscritos';
       var URL_POSICIONES = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPosiciones';
+      var URL_PARTIDOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPartidos';
+      var URL_MIS_PRONOSTICOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/misPronosticos';
+      var URL_GUARDAR_PRONOSTICO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/guardarPronostico';
       var CLAVE_STORAGE = 'quiniela_sesion';
 
       var tabs = document.querySelectorAll('.tab');
       var vistas = document.querySelectorAll('.form-view');
       var inscritosCargados = false;
+
+      // ---------- Estado de la pantalla de partidos ----------
+      var todosPartidos = [];
+      var misPronosticos = {}; // { partidoId: {golesLocal, golesVisitante} }
+      var faseActiva = 'Todos';
 
       function mostrarVista(id){
         vistas.forEach(function(v){ v.classList.remove('active'); });
@@ -910,6 +1219,292 @@
           });
       }
 
+      // ---------- Partidos ----------
+      function cargarPartidos(){
+        var sesion = obtenerSesion();
+        if (!sesion) return;
+
+        document.getElementById('listaPartidos').innerHTML = '<div class="loading"><div class="spinner"></div>Cargando partidos…</div>';
+        limpiarMensaje('mensaje-partidos');
+
+        Promise.all([
+          fetch(URL_PARTIDOS + '?slug=' + encodeURIComponent(SLUG_TENANT)).then(function(r){ return r.json(); }),
+          fetch(URL_MIS_PRONOSTICOS, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({token: sesion.token})
+          }).then(function(r){ return r.json(); })
+        ])
+          .then(function(resultados){
+            var dataPartidos = resultados[0];
+            var dataProns = resultados[1];
+
+            if (!dataPartidos.ok){
+              mostrarMensaje('mensaje-partidos', dataPartidos.error || 'No se pudieron cargar los partidos.', 'error');
+              document.getElementById('listaPartidos').innerHTML = '';
+              return;
+            }
+            if (dataProns.ok === false && dataProns.error && dataProns.error.indexOf('Sesión') !== -1){
+              localStorage.removeItem(CLAVE_STORAGE);
+              activarTab('vista-login');
+              return;
+            }
+
+            todosPartidos = dataPartidos.partidos || [];
+            misPronosticos = (dataProns.ok && dataProns.pronosticos) ? dataProns.pronosticos : {};
+            construirFiltros();
+            renderPartidos();
+          })
+          .catch(function(){
+            document.getElementById('listaPartidos').innerHTML = '';
+            mostrarMensaje('mensaje-partidos', 'No pudimos conectar con el servidor.', 'error');
+          });
+      }
+
+      function obtenerSesion(){
+        var guardada = localStorage.getItem(CLAVE_STORAGE);
+        if (!guardada) return null;
+        try { return JSON.parse(guardada); } catch(e){ return null; }
+      }
+
+      function construirFiltros(){
+        var jornadas = [];
+        var vistas2 = {};
+        todosPartidos.forEach(function(p){
+          if (p.fase === 'Fase de liga' && p.jornada && !vistas2['J' + p.jornada]){
+            vistas2['J' + p.jornada] = true;
+            jornadas.push(p.jornada);
+          }
+        });
+        jornadas.sort(function(a, b){ return a - b; });
+
+        var otrasFases = [];
+        var vistasFase = {};
+        todosPartidos.forEach(function(p){
+          if (p.fase !== 'Fase de liga' && !vistasFase[p.fase]){
+            vistasFase[p.fase] = true;
+            otrasFases.push(p.fase);
+          }
+        });
+
+        var etiquetas = ['Todos']
+          .concat(jornadas.map(function(j){ return 'J' + j; }))
+          .concat(otrasFases)
+          .concat(['Cerrados']);
+
+        document.getElementById('filtros').innerHTML = etiquetas.map(function(e){
+          return '<button class="filtro-btn' + (e === faseActiva ? ' active' : '') + '" data-filtro="' + e + '">' + e + '</button>';
+        }).join('');
+
+        document.querySelectorAll('.filtro-btn').forEach(function(btn){
+          btn.addEventListener('click', function(){ filtrar(btn.dataset.filtro); });
+        });
+      }
+
+      function filtrar(etiqueta){
+        faseActiva = etiqueta;
+        document.querySelectorAll('.filtro-btn').forEach(function(b){
+          b.classList.toggle('active', b.dataset.filtro === etiqueta);
+        });
+        renderPartidos();
+      }
+
+      function partidosDeFiltro(etiqueta){
+        if (etiqueta === 'Todos') return todosPartidos;
+        var match = /^J(\d+)$/.exec(etiqueta);
+        if (match){
+          var jornada = parseInt(match[1], 10);
+          return todosPartidos.filter(function(p){ return p.fase === 'Fase de liga' && p.jornada === jornada; });
+        }
+        return todosPartidos.filter(function(p){ return p.fase === etiqueta; });
+      }
+
+      function renderPartidos(){
+        var ahora = Date.now();
+        var lista = document.getElementById('listaPartidos');
+
+        if (faseActiva === 'Cerrados'){
+          var cerrados = todosPartidos.filter(function(p){ return !p.abierto; }).slice().reverse();
+          actualizarProgreso(0, 0);
+          if (!cerrados.length){
+            lista.innerHTML = '<div class="empty-state">Aún no hay partidos cerrados.</div>';
+            return;
+          }
+          lista.innerHTML = cerrados.map(function(p){ return renderPartidoCard(p, ahora); }).join('');
+          return;
+        }
+
+        var filtrados = partidosDeFiltro(faseActiva);
+        if (!filtrados.length){
+          actualizarProgreso(0, 0);
+          lista.innerHTML = '<div class="empty-state">No hay partidos en esta selección todavía.</div>';
+          return;
+        }
+
+        var totalAbiertos = todosPartidos.filter(function(p){ return p.abierto; }).length;
+        var pronosticados = todosPartidos.filter(function(p){ return p.abierto && misPronosticos[p.id]; }).length;
+        actualizarProgreso(pronosticados, totalAbiertos);
+
+        var abiertos = filtrados.filter(function(p){ return p.abierto; });
+        var cerradosEnFiltro = filtrados.filter(function(p){ return !p.abierto; });
+
+        var html = '';
+        if (abiertos.length){
+          if (cerradosEnFiltro.length) html += '<div class="separador-estado">Abiertos</div>';
+          html += abiertos.map(function(p){ return renderPartidoCard(p, ahora); }).join('');
+        }
+        if (cerradosEnFiltro.length){
+          html += '<div class="separador-estado">Cerrados</div>';
+          html += cerradosEnFiltro.map(function(p){ return renderPartidoCard(p, ahora); }).join('');
+        }
+        lista.innerHTML = html;
+      }
+
+      function actualizarProgreso(hechos, total){
+        var banner = document.getElementById('progresoBanner');
+        if (total === 0){ banner.innerHTML = ''; return; }
+        var pct = Math.round((hechos / total) * 100);
+        banner.innerHTML =
+          '<div class="progreso-banner">' +
+            '<div class="progreso-top">' +
+              '<span class="progreso-label">Mis pronósticos</span>' +
+              '<span class="progreso-count">' + hechos + ' <span>/ ' + total + ' disponibles</span></span>' +
+            '</div>' +
+            '<div class="progreso-bar-wrap"><div class="progreso-bar" style="width:' + pct + '%"></div></div>' +
+          '</div>';
+      }
+
+      function formatearFechaHora(ms){
+        if (!ms) return '';
+        try {
+          return new Intl.DateTimeFormat('es-MX', {
+            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+            timeZone: 'America/Mexico_City'
+          }).format(new Date(ms)) + ' CDMX';
+        } catch(e){ return ''; }
+      }
+
+      function renderPartidoCard(p, ahora){
+        var cerrado = !p.abierto;
+        var urgente = p.cierreTimestamp && (p.cierreTimestamp - ahora) > 0 && (p.cierreTimestamp - ahora) < 7200000;
+        var pron = misPronosticos[p.id] || null;
+        var faseTexto = p.fase + (p.ronda ? ' · ' + p.ronda : '') + (p.jornada ? ' · J' + p.jornada : '');
+
+        var marcador;
+        if (p.resultadoCapturado){
+          marcador = '<div class="resultado-final">' + p.golesLocal + ' — ' + p.golesVisitante + '</div>';
+        } else {
+          marcador =
+            '<div class="marcador-inputs">' +
+              '<div class="stepper' + (pron ? ' guardado' : '') + (cerrado ? ' disabled' : '') + '" id="step-l-' + p.id + '">' +
+                '<button class="stepper-btn" onclick="cambiarGoles(\'' + p.id + '\',\'l\',-1)" ' + (cerrado ? 'disabled' : '') + '>−</button>' +
+                '<div class="stepper-num" id="gl-' + p.id + '">' + (pron ? pron.golesLocal : '-') + '</div>' +
+                '<button class="stepper-btn" onclick="cambiarGoles(\'' + p.id + '\',\'l\',1)" ' + (cerrado ? 'disabled' : '') + '>+</button>' +
+              '</div>' +
+              '<div class="guion">—</div>' +
+              '<div class="stepper' + (pron ? ' guardado' : '') + (cerrado ? ' disabled' : '') + '" id="step-v-' + p.id + '">' +
+                '<button class="stepper-btn" onclick="cambiarGoles(\'' + p.id + '\',\'v\',-1)" ' + (cerrado ? 'disabled' : '') + '>−</button>' +
+                '<div class="stepper-num" id="gv-' + p.id + '">' + (pron ? pron.golesVisitante : '-') + '</div>' +
+                '<button class="stepper-btn" onclick="cambiarGoles(\'' + p.id + '\',\'v\',1)" ' + (cerrado ? 'disabled' : '') + '>+</button>' +
+              '</div>' +
+            '</div>';
+        }
+
+        var boton = (!cerrado && !p.resultadoCapturado) ?
+          '<button class="btn-guardar' + (pron ? ' guardado' : '') + '" onclick="guardarPron(\'' + p.id + '\')" id="btn-' + p.id + '">' +
+            (pron ? '✓ Guardado — clic para actualizar' : 'Guardar pronóstico') +
+          '</button>' : '';
+
+        return (
+          '<div class="partido-card' + (pron ? ' pronosticado' : '') + (cerrado ? ' cerrado' : '') + '" id="card-' + p.id + '">' +
+            '<div class="partido-meta">' +
+              '<span class="partido-fase">' + faseTexto + '</span>' +
+              '<span class="partido-cierre' + (urgente ? ' urgente' : '') + '">' +
+                (cerrado ? '🔒 Cerrado' : '⏱ Cierre: ' + formatearFechaHora(p.cierreTimestamp)) +
+              '</span>' +
+            '</div>' +
+            '<div class="partido-equipos">' +
+              '<div class="equipo-local"><div class="equipo-nombre">' + (p.local || 'Por definir') + '</div></div>' +
+              '<div class="vs-badge">VS</div>' +
+              '<div class="equipo-visitante"><div class="equipo-nombre">' + (p.visitante || 'Por definir') + '</div></div>' +
+            '</div>' +
+            marcador +
+            boton +
+          '</div>'
+        );
+      }
+
+      function cambiarGoles(id, lado, delta){
+        var elId = lado === 'l' ? 'gl-' + id : 'gv-' + id;
+        var el = document.getElementById(elId);
+        if (!el) return;
+        var actual = parseInt(el.textContent, 10);
+        if (isNaN(actual)) actual = 0;
+        el.textContent = Math.max(0, Math.min(30, actual + delta));
+      }
+
+      function guardarPron(id){
+        var gl = parseInt(document.getElementById('gl-' + id).textContent, 10);
+        var gv = parseInt(document.getElementById('gv-' + id).textContent, 10);
+        if (isNaN(gl) || isNaN(gv)){ mostrarToast('Ingresa el marcador completo', 'err'); return; }
+
+        var sesion = obtenerSesion();
+        if (!sesion || !sesion.token){ mostrarToast('Sesión expirada. Vuelve a iniciar sesión.', 'err'); return; }
+
+        var btn = document.getElementById('btn-' + id);
+        btn.disabled = true;
+        btn.textContent = 'Guardando…';
+
+        fetch(URL_GUARDAR_PRONOSTICO, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({token: sesion.token, partidoId: id, golesLocal: gl, golesVisitante: gv})
+        })
+          .then(function(resp){ return resp.json().then(function(data){ return {status: resp.status, data: data}; }); })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              misPronosticos[id] = {golesLocal: gl, golesVisitante: gv};
+              document.getElementById('card-' + id).classList.add('pronosticado');
+              ['step-l-' + id, 'step-v-' + id].forEach(function(s){
+                var el = document.getElementById(s);
+                if (el) el.classList.add('guardado');
+              });
+              btn.disabled = false;
+              btn.classList.add('guardado');
+              btn.textContent = '✓ Guardado — clic para actualizar';
+              mostrarToast(res.data.mensaje || 'Pronóstico guardado', 'ok');
+              var totalAbiertos = todosPartidos.filter(function(p){ return p.abierto; }).length;
+              var hechos = todosPartidos.filter(function(p){ return p.abierto && misPronosticos[p.id]; }).length;
+              actualizarProgreso(hechos, totalAbiertos);
+            } else {
+              mostrarToast(res.data.error || 'Error al guardar', 'err');
+              btn.disabled = false;
+              btn.textContent = 'Guardar pronóstico';
+              if (res.data.error && res.data.error.indexOf('Sesión') !== -1){
+                localStorage.removeItem(CLAVE_STORAGE);
+                activarTab('vista-login');
+              }
+            }
+          })
+          .catch(function(){
+            mostrarToast('Error de conexión', 'err');
+            btn.disabled = false;
+            btn.textContent = 'Guardar pronóstico';
+          });
+      }
+
+      function mostrarToast(msg, tipo){
+        var t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast visible ' + (tipo || '');
+        setTimeout(function(){ t.className = 'toast'; }, 3500);
+      }
+
+      // Los onclick inline de las tarjetas de partido corren en el scope
+      // global, no dentro de este IIFE — hay que exponerlas explícitamente.
+      window.cambiarGoles = cambiarGoles;
+      window.guardarPron = guardarPron;
+
       // ---------- Sesión ----------
       function guardarSesion(datos){
         localStorage.setItem(CLAVE_STORAGE, JSON.stringify({
@@ -922,13 +1517,21 @@
       function mostrarSesionActiva(datos){
         document.getElementById('saludo-nombre').textContent = 'Hola, ' + datos.nombre;
         var textoPago = {
-          pendiente: 'Tu registro está confirmado. Todavía no tienes pago registrado — puedes pronosticar la jornada 1, para el resto necesitas completar tu pago.',
+          pendiente: 'Todavía no tienes pago registrado — puedes pronosticar la jornada 1. Para el resto necesitas completar tu pago.',
           pagado: 'Tu pago está registrado. Ya puedes pronosticar todas las jornadas.',
-          deshabilitado: 'Tu cuenta está deshabilitada por falta de pago. Contacta a Harry para regularizarte.'
+          deshabilitado: 'Tu cuenta está deshabilitada por falta de pago. Contacta al administrador para regularizarte.'
         };
-        document.getElementById('estado-pago-texto').textContent = textoPago[datos.estadoPago] || '';
+        var banner = document.getElementById('estado-pago-banner');
+        if (datos.estadoPago === 'pagado'){
+          banner.style.display = 'none';
+        } else {
+          banner.textContent = textoPago[datos.estadoPago] || '';
+          banner.className = 'estado-pago-banner ' + (datos.estadoPago || '');
+          banner.style.display = 'block';
+        }
         tabs.forEach(function(t){ t.classList.remove('active'); });
         mostrarVista('vista-autenticado');
+        cargarPartidos();
       }
 
       document.getElementById('btn-salir').addEventListener('click', function(){
