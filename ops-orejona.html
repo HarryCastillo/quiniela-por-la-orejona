@@ -319,7 +319,9 @@
 <script>
 (function(){
   // --- Rellenar con las URLs reales despues de desplegar cada función ---
-  var SLUG_TENANT = 'amigos';
+  // Tenant por hash de URL (#demo, #amigos, etc), mismo patrón que
+  // index.html. Sin hash, cae en "amigos" para no romper el uso diario.
+  var SLUG_TENANT = (window.location.hash || '').replace('#', '').trim() || 'amigos';
   var URL_GET_PARTIDOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPartidos';
   var URL_PREVISUALIZAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/previsualizarResultado';
   var URL_CONFIRMAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/confirmarResultado';
