@@ -473,6 +473,44 @@
   }
 
   .inscritos-list li:last-child{ border-bottom: none; }
+
+  .pos-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--border-2);
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .pos-row:last-child{ border-bottom: none; }
+
+  .pos-lugar{
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-3);
+    min-width: 20px;
+    text-align: right;
+  }
+
+  .pos-lugar.oro{ color: var(--gold); }
+  .pos-lugar.plata{ color: #cfd8dc; }
+  .pos-lugar.bronce{ color: var(--bronze); }
+
+  .pos-nombre{
+    flex: 1;
+    text-align: left;
+    color: var(--text);
+  }
+
+  .pos-stats{
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
@@ -642,6 +680,7 @@
       var URL_REGISTRO = 'https://registrarusuario-guv46sjobq-uc.a.run.app';
       var URL_LOGIN = 'https://login-guv46sjobq-uc.a.run.app';
       var URL_INSCRITOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getInscritos';
+      var URL_POSICIONES = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/getPosiciones';
       var CLAVE_STORAGE = 'quiniela_sesion';
 
       var tabs = document.querySelectorAll('.tab');
@@ -795,6 +834,11 @@
               titulo.textContent = nombreTab;
               document.getElementById('tab-inscritos').textContent = nombreTab;
 
+              if (res.data.torneoIniciado){
+                cargarPosiciones(conteo, lista);
+                return;
+              }
+
               var inscritos = res.data.inscritos || [];
               conteo.textContent = inscritos.length + (inscritos.length === 1 ? ' inscrito' : ' inscritos');
 
@@ -808,6 +852,36 @@
               mostrarMensaje('mensaje-inscritos', res.data.error || 'No se pudo cargar la lista.', 'error');
               conteo.textContent = '';
             }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-inscritos', 'No pudimos conectar con el servidor.', 'error');
+            conteo.textContent = '';
+          });
+      }
+
+      function cargarPosiciones(conteo, lista){
+        fetch(URL_POSICIONES + '?slug=' + encodeURIComponent(SLUG_TENANT))
+          .then(function(resp){ return resp.json(); })
+          .then(function(data){
+            if (!data.ok){
+              mostrarMensaje('mensaje-inscritos', data.error || 'No se pudo cargar la tabla.', 'error');
+              conteo.textContent = '';
+              return;
+            }
+            var posiciones = data.posiciones || [];
+            conteo.textContent = posiciones.length + (posiciones.length === 1 ? ' participante' : ' participantes');
+
+            lista.innerHTML = '';
+            posiciones.forEach(function(p){
+              var claseMedalla = p.lugar === 1 ? 'oro' : p.lugar === 2 ? 'plata' : p.lugar === 3 ? 'bronce' : '';
+              var li = document.createElement('li');
+              li.className = 'pos-row';
+              li.innerHTML =
+                '<span class="pos-lugar ' + claseMedalla + '">' + p.lugar + '</span>' +
+                '<span class="pos-nombre">' + p.username + '</span>' +
+                '<span class="pos-stats">' + p.puntos + ' pts &middot; ' + p.exactos + ' exactos &middot; ' + p.correctos + ' correctos</span>';
+              lista.appendChild(li);
+            });
           })
           .catch(function(){
             mostrarMensaje('mensaje-inscritos', 'No pudimos conectar con el servidor.', 'error');
