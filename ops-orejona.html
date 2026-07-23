@@ -526,7 +526,7 @@
       var tag = f.exacto ? '<span class="tag-exacto">⭐ Exacto</span>'
         : f.correcto ? '<span class="tag-correcto">✓ Correcto</span>'
         : '<span class="tag-fallo">—</span>';
-      return '<tr><td>' + f.usuarioId + '</td><td>' + f.pronostico + '</td><td>' + tag + '</td><td>+' + f.puntos + '</td></tr>';
+      return '<tr><td>' + f.username + '</td><td>' + f.pronostico + '</td><td>' + tag + '</td><td>+' + f.puntos + '</td></tr>';
     }).join('');
 
     document.getElementById('cardPreview').scrollIntoView({behavior:'smooth', block:'center'});
