@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ops — Quiniela Amigos, Por la Orejona</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,6 +82,12 @@
     border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px;
   }
   .seleccionado-banner strong{ color: var(--green-light); }
+
+  .banner-sin-pago{
+    background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.35);
+    border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; font-size: 13px;
+    color: var(--gold);
+  }
 
   table{ width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
   th{
@@ -258,6 +264,7 @@
 
     <div id="sec-participantes" class="admin-sec">
       <div class="card">
+        <div id="bannerSinPago" style="display:none"></div>
         <div class="search-bar">
           <input type="text" id="busquedaParticipantes" placeholder="Buscar por nombre, correo o username...">
         </div>
@@ -584,6 +591,14 @@
       if (manejarNoAutorizado(data)) return;
       if (!data.ok){ cont.innerHTML = '<div class="empty-state">Error al cargar participantes.</div>'; return; }
       participantes = data.participantes || [];
+      var banner = document.getElementById('bannerSinPago');
+      if (data.requierePago === false){
+        banner.textContent = '💡 Este tenant no requiere pago — el estado de pago de cada participante no bloquea nada.';
+        banner.className = 'banner-sin-pago';
+        banner.style.display = 'block';
+      } else {
+        banner.style.display = 'none';
+      }
       renderParticipantes();
     }).catch(function(){
       cont.innerHTML = '<div class="empty-state">No se pudo conectar con el servidor.</div>';
