@@ -829,7 +829,7 @@
     color: var(--text-3);
     font-size: 20px;
     font-weight: 300;
-    padding: 8px 12px;
+    padding: 14px 12px;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
     line-height: 1;
@@ -1320,6 +1320,18 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modalBajaCorreo">
+    <div class="modal-box" style="max-width:420px;text-align:center">
+      <div style="font-size:40px;margin-bottom:12px">📧</div>
+      <div class="modal-nombre" style="margin-bottom:10px">Cancelar suscripción</div>
+      <p style="color:var(--text-3);font-size:13.5px;line-height:1.6" id="bajaCorreoTexto"></p>
+      <div id="bajaCorreoAcciones" style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+        <button class="btn-guardar" id="btnConfirmarBaja" type="button">Sí, ya no quiero recibir correos</button>
+        <button type="button" id="btnCancelarBaja" style="background:none;border:none;color:var(--text-3);font-size:12.5px;cursor:pointer;text-decoration:underline">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function(){
       // Tenant por hash de URL (#demo, #amigos, etc). Sin hash, cae en
@@ -1335,7 +1347,50 @@
       var URL_GUARDAR_PRONOSTICO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/guardarPronostico';
       var URL_RECUPERAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/solicitarRecuperacion';
       var URL_CAMBIAR_PASSWORD = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/cambiarPassword';
+      var URL_BAJA_CORREO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/procesarBajaCorreo';
       var CLAVE_STORAGE = 'quiniela_sesion_' + SLUG_TENANT;
+
+      // ---------- Baja de correo (?unsub=correo en la URL) ----------
+      (function(){
+        var params = new URLSearchParams(window.location.search);
+        var correoBaja = params.get('unsub');
+        if (!correoBaja) return;
+        var modal = document.getElementById('modalBajaCorreo');
+        var texto = document.getElementById('bajaCorreoTexto');
+        var acciones = document.getElementById('bajaCorreoAcciones');
+        var btnConfirmar = document.getElementById('btnConfirmarBaja');
+        var btnCancelar = document.getElementById('btnCancelarBaja');
+        texto.innerHTML = '¿Confirmas que ya no quieres recibir correos ' +
+          'de la Quiniela Amigos?<br><strong style="color:var(--text)">' +
+          correoBaja + '</strong>';
+        modal.classList.add('open');
+        btnCancelar.addEventListener('click', function(){
+          modal.classList.remove('open');
+          window.history.replaceState(
+            {}, '', window.location.pathname + window.location.hash,
+          );
+        });
+        btnConfirmar.addEventListener('click', function(){
+          btnConfirmar.disabled = true;
+          btnConfirmar.textContent = 'Procesando...';
+          fetch(URL_BAJA_CORREO, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({correo: correoBaja}),
+          })
+            .then(function(r){ return r.json(); })
+            .then(function(){
+              texto.innerHTML = '✅ Listo, ya quedó registrada tu baja.';
+              acciones.style.display = 'none';
+            })
+            .catch(function(){
+              btnConfirmar.disabled = false;
+              btnConfirmar.textContent = 'Sí, ya no quiero recibir correos';
+              texto.innerHTML += '<br><span style="color:var(--error)">' +
+                'Hubo un error, intenta de nuevo.</span>';
+            });
+        });
+      })();
 
       var tabs = document.querySelectorAll('.tab');
       var vistas = document.querySelectorAll('.form-view');
