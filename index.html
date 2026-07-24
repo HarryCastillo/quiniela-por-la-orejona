@@ -42,16 +42,94 @@
       repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 64px);
     color: var(--text);
     font-family: 'Work Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--panel-1);
+    border-bottom: 1px solid var(--border-2);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+
+  .header-logo{
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .header-logo .accent{ color: var(--gold); }
+
+  .user-badge{
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-3);
+    cursor: pointer;
+    position: relative;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .user-badge.visible{ display: flex; }
+
+  .user-avatar{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
-    overflow-x: hidden;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .user-menu{
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: var(--panel-2);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 150px;
+    z-index: 200;
+  }
+
+  .user-menu.visible{ display: block; }
+
+  .user-menu-item{
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text-3);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .user-menu-item:hover{ background: var(--panel-3); color: var(--error); }
+
+  main{
+    display: block;
+    padding: 24px 20px 40px;
   }
 
   .wrap{
     max-width: 720px;
     width: 100%;
+    margin: 0 auto;
     text-align: center;
     position: relative;
   }
@@ -60,13 +138,13 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 18px;
-    margin-bottom: 8px;
+    gap: 14px;
+    margin-bottom: 6px;
   }
 
   .handle{
-    width: 34px;
-    height: 60px;
+    width: 24px;
+    height: 40px;
     border: 3px solid var(--gold);
     border-bottom: none;
     border-radius: 20px 20px 0 0;
@@ -100,8 +178,8 @@
   h1{
     font-family: 'Anton', sans-serif;
     font-weight: 400;
-    font-size: clamp(48px, 12vw, 108px);
-    line-height: 0.92;
+    font-size: clamp(32px, 8vw, 60px);
+    line-height: 0.95;
     letter-spacing: 0.01em;
     margin: 0;
     color: var(--text);
@@ -112,39 +190,39 @@
 
   .season{
     font-family: 'Space Mono', monospace;
-    font-size: clamp(18px, 4vw, 26px);
-    letter-spacing: 0.08em;
+    font-size: clamp(14px, 3vw, 18px);
+    letter-spacing: 0.06em;
     color: var(--text);
     background: var(--panel-2);
     border: 1px solid var(--border-2);
     display: inline-block;
-    padding: 8px 22px;
+    padding: 6px 16px;
     border-radius: 6px;
-    margin: 28px 0 34px;
+    margin: 14px 0 16px;
   }
 
   .season b{ color: var(--green-light); font-weight: 700; }
 
   p.lead{
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.6;
     color: var(--text-2);
     max-width: 460px;
-    margin: 0 auto 10px;
+    margin: 0 auto 6px;
   }
 
   p.sub{
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-4);
     max-width: 460px;
-    margin: 18px auto 0;
+    margin: 8px auto 0;
     line-height: 1.6;
   }
 
   /* ---------- Panel de acceso ---------- */
 
   .panel-acceso{
-    margin-top: 46px;
+    margin-top: 22px;
     background: var(--panel-1);
     border: 1px solid var(--border-2);
     border-radius: 14px;
@@ -155,11 +233,15 @@
   .tabs{
     display: flex;
     gap: 22px;
-    padding: 14px 22px 0;
+    padding: 0 24px;
     border-bottom: 1px solid var(--border-2);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    position: sticky;
+    top: 56px;
+    background: var(--panel-1);
+    z-index: 90;
   }
 
   .tabs::-webkit-scrollbar{ display: none; }
@@ -175,7 +257,7 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
-    padding: 0 2px 12px;
+    padding: 14px 2px;
     cursor: pointer;
     transition: color 0.15s ease, border-color 0.15s ease;
   }
@@ -193,6 +275,63 @@
   }
 
   .form-body{ padding: 24px 22px 26px; }
+
+  .subtabs-inicio{
+    display: flex;
+    max-width: 100%;
+    margin: 0 0 22px;
+    background: var(--panel-3);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .subtab{
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-3);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    transition: all 0.2s;
+    font-family: 'Work Sans', sans-serif;
+  }
+
+  .subtab.active{ background: var(--panel-1); color: var(--text); }
+
+  .subpanel{ display: none; }
+  .subpanel.active{ display: block; }
+
+  .premios-intro{ text-align: center; margin-bottom: 22px; }
+  .premios-intro h2{ font-family: 'Anton', sans-serif; font-size: 24px; letter-spacing: 0.02em; margin-bottom: 8px; text-transform: uppercase; }
+  .premios-intro p{ color: var(--text-3); font-size: 14px; }
+
+  .slider-wrap{ margin-bottom: 24px; }
+  .slider-label{ display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-3); margin-bottom: 8px; font-family: 'Space Mono', monospace; }
+  .slider-label strong{ color: var(--text); font-size: 15px; }
+  input[type=range]{ width: 100%; accent-color: var(--green); }
+
+  .premios-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .premio-card{ background: var(--panel-2); border: 1px solid var(--border-2); border-radius: 12px; padding: 18px 14px; text-align: center; }
+  .premio-card.gold{ border-color: var(--gold); }
+  .premio-card.silver{ border-color: #aaa; }
+  .premio-card.bronze{ border-color: var(--bronze); }
+  .premio-lugar{ font-size: 26px; margin-bottom: 6px; }
+  .premio-titulo{ font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 8px; }
+  .premio-monto{ font-family: 'Space Mono', monospace; font-size: 20px; color: var(--green-light); letter-spacing: 0.02em; }
+  .premio-card.gold .premio-monto{ color: var(--gold); }
+
+  .acumulado-resumen{ background: var(--panel-2); border: 1px solid var(--border-2); border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+  .acumulado-resumen span{ color: var(--text-3); font-size: 14px; }
+  .acumulado-total{ font-family: 'Anton', sans-serif; font-size: 20px; color: var(--text); }
+
+  @media (max-width: 480px){
+    .premios-grid{ grid-template-columns: 1fr; }
+  }
 
   .campo{ margin-bottom: 16px; }
 
@@ -922,31 +1061,50 @@
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="handles" aria-hidden="true">
-      <div class="handle"></div>
-      <div class="handle right"></div>
-    </div>
-    <p class="eyebrow">Quiniela Amigos</p>
-    <h1>Por la <span class="accent">Orejona</span></h1>
-    <div class="season">Temporada <b>2026&ndash;2027</b></div>
-    <p class="lead">Pronostica la fase de liga, playoffs y todo el camino hasta la Final de la Champions League.</p>
-    <p class="sub">¿Ya jugaste con nosotros el Mundial 2026? Aquí seguimos — mismo grupo, nuevo torneo.</p>
-
-    <div class="panel-acceso" id="panel-acceso">
-
-      <!-- Tabs -->
-      <div class="tabs" id="tabs">
-        <button class="tab" data-target="vista-reglas" type="button">Reglas</button>
-        <button class="tab active" data-target="vista-registro" type="button">Registrarme</button>
-        <button class="tab" data-target="vista-login" type="button">Ya tengo cuenta</button>
-        <button class="tab" data-target="vista-inscritos" type="button" id="tab-inscritos">Inscritos</button>
+  <header>
+    <div class="header-logo">Por la <span class="accent">Orejona</span></div>
+    <div class="user-badge" id="userBadge" onclick="toggleUserMenu()">
+      <div class="user-avatar" id="userAvatar"></div>
+      <span id="userBadgeNombre"></span>
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu-item" id="btnSalirHeader">Cerrar sesión</div>
       </div>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-target="vista-inicio" type="button">Inicio</button>
+    <button class="tab" data-target="vista-premios" type="button" id="tab-premios">Premios</button>
+    <button class="tab tab-auth" data-target="vista-autenticado" type="button" id="tab-pronosticos" style="display:none">Pronósticos</button>
+    <button class="tab" data-target="vista-inscritos" type="button" id="tab-inscritos">Inscritos</button>
+    <button class="tab" data-target="vista-reglas" type="button">Reglas</button>
+  </div>
+
+  <main>
+  <div class="wrap">
+    <div class="panel-acceso" id="panel-acceso">
 
       <div class="form-body">
 
-        <!-- Vista: registro -->
-        <div class="form-view active" id="vista-registro">
+        <!-- Vista: Inicio (hero + registro/login) -->
+        <div class="form-view active" id="vista-inicio">
+          <div class="handles" aria-hidden="true">
+            <div class="handle"></div>
+            <div class="handle right"></div>
+          </div>
+          <p class="eyebrow">Quiniela Amigos</p>
+          <h1>Por la <span class="accent">Orejona</span></h1>
+          <div class="season">Temporada <b>2026&ndash;2027</b></div>
+          <p class="lead">Pronostica la fase de liga, playoffs y todo el camino hasta la Final de la Champions League.</p>
+          <p class="sub">¿Ya jugaste con nosotros el Mundial 2026? Aquí seguimos — mismo grupo, nuevo torneo.</p>
+
+          <div class="subtabs-inicio">
+            <button type="button" class="subtab active" data-sub="panel-registro">Crear cuenta</button>
+            <button type="button" class="subtab" data-sub="panel-login">Ya tengo cuenta</button>
+          </div>
+
+          <div class="subpanel active" id="panel-registro">
           <form id="form-registro" novalidate>
             <div class="campo">
               <label for="reg-nombre">Nombre</label>
@@ -967,10 +1125,10 @@
             <button class="btn-enviar" type="submit" id="btn-registro">Crear mi cuenta</button>
             <div class="mensaje" id="mensaje-registro"></div>
           </form>
-        </div>
+          </div>
 
-        <!-- Vista: login -->
-        <div class="form-view" id="vista-login">
+        <!-- Login (subpanel dentro de Inicio) -->
+        <div class="subpanel" id="panel-login">
           <form id="form-login" novalidate>
             <div class="campo">
               <label for="login-correo">Correo</label>
@@ -985,6 +1143,9 @@
           </form>
         </div>
 
+        </div>
+        <!-- fin vista-inicio -->
+
         <!-- Vista: correo de verificación enviado -->
         <div class="form-view" id="vista-correo-enviado">
           <div class="aviso-correo">
@@ -992,6 +1153,25 @@
             <h2>Revisa tu correo</h2>
             <p>Te mandamos un link para confirmar tu cuenta. Puede tardar unos minutos y a veces cae en spam. El link es válido por 8 horas.</p>
           </div>
+        </div>
+
+        <!-- Vista: premios -->
+        <div class="form-view" id="vista-premios">
+          <div class="premios-intro">
+            <h2>💰 Tabla de premios</h2>
+            <p>Los premios dependen del número de participantes inscritos. Mueve el slider para ver cuánto podría ganar cada lugar.</p>
+            <div id="inscritosRealPremios" style="display:none;margin-top:10px;font-size:13px;color:var(--gold);font-weight:600"></div>
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-label"><span>Participantes inscritos</span><strong id="sliderVal">20</strong></div>
+            <input type="range" min="5" max="100" step="1" value="20" id="sliderPart">
+          </div>
+          <div class="premios-grid">
+            <div class="premio-card gold"><div class="premio-lugar">🥇</div><div class="premio-titulo">1er lugar</div><div class="premio-monto" id="p1">$0</div></div>
+            <div class="premio-card silver"><div class="premio-lugar">🥈</div><div class="premio-titulo">2do lugar</div><div class="premio-monto" id="p2">$0</div></div>
+            <div class="premio-card bronze"><div class="premio-lugar">🥉</div><div class="premio-titulo">3er lugar</div><div class="premio-monto" id="p3">$0</div></div>
+          </div>
+          <div class="acumulado-resumen"><span>Premio Acumulado</span><div class="acumulado-total" id="premioAcumulado">$0</div></div>
         </div>
 
         <!-- Vista: ya autenticado -->
@@ -1083,6 +1263,7 @@
 
     <div class="status"><span class="dot"></span> Registro abierto</div>
   </div>
+  </main>
 
   <div class="toast" id="toast"></div>
 
@@ -1111,6 +1292,7 @@
       var tabs = document.querySelectorAll('.tab');
       var vistas = document.querySelectorAll('.form-view');
       var inscritosCargados = false;
+      var premiosCargados = false;
 
       // ---------- Estado de la pantalla de partidos ----------
       var todosPartidos = [];
@@ -1130,6 +1312,9 @@
         if (target === 'vista-inscritos' && !inscritosCargados){
           cargarInscritos();
         }
+        if (target === 'vista-premios' && !premiosCargados){
+          cargarConteoPremios();
+        }
       }
 
       tabs.forEach(function(tab){
@@ -1137,6 +1322,57 @@
           activarTab(tab.dataset.target);
         });
       });
+
+      // ---------- Subtabs de Inicio (Crear cuenta / Ya tengo cuenta) ----------
+      function mostrarSubpanel(id){
+        document.querySelectorAll('.subtab').forEach(function(b){
+          b.classList.toggle('active', b.dataset.sub === id);
+        });
+        document.querySelectorAll('.subpanel').forEach(function(p){
+          p.classList.toggle('active', p.id === id);
+        });
+      }
+
+      document.querySelectorAll('.subtab').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          mostrarSubpanel(btn.dataset.sub);
+        });
+      });
+
+      // ---------- Premios ----------
+      var PRECIO_INSCRIPCION = 400;
+
+      function actualizarPremios(){
+        var n = parseInt(document.getElementById('sliderPart').value, 10);
+        document.getElementById('sliderVal').textContent = n;
+        var total = n * PRECIO_INSCRIPCION;
+        var acumulado = Math.round(total * 0.70);
+        document.getElementById('premioAcumulado').textContent = '$' + acumulado.toLocaleString('es-MX');
+        document.getElementById('p1').textContent = '$' + Math.round(acumulado * 0.50).toLocaleString('es-MX');
+        document.getElementById('p2').textContent = '$' + Math.round(acumulado * 0.30).toLocaleString('es-MX');
+        document.getElementById('p3').textContent = '$' + Math.round(acumulado * 0.20).toLocaleString('es-MX');
+      }
+
+      document.getElementById('sliderPart').addEventListener('input', actualizarPremios);
+      actualizarPremios();
+
+      function cargarConteoPremios(){
+        fetch(URL_INSCRITOS + '?slug=' + encodeURIComponent(SLUG_TENANT))
+          .then(function(resp){ return resp.json(); })
+          .then(function(data){
+            premiosCargados = true;
+            if (!data.ok) return;
+            var n = (data.inscritos || []).length;
+            if (!n) return;
+            var el = document.getElementById('inscritosRealPremios');
+            el.style.display = 'block';
+            el.textContent = '⚡ ' + n + (n === 1 ? ' inscrito hasta ahora' : ' inscritos hasta ahora');
+            var slider = document.getElementById('sliderPart');
+            slider.value = Math.max(5, n);
+            actualizarPremios();
+          })
+          .catch(function(){ premiosCargados = false; });
+      }
 
       function mostrarMensaje(elId, texto, tipo){
         var el = document.getElementById(elId);
@@ -1427,8 +1663,7 @@
               return;
             }
             if (dataProns.ok === false && dataProns.error && dataProns.error.indexOf('Sesión') !== -1){
-              localStorage.removeItem(CLAVE_STORAGE);
-              activarTab('vista-login');
+              cerrarSesionActiva();
               return;
             }
 
@@ -1663,8 +1898,7 @@
               btn.disabled = false;
               btn.textContent = 'Guardar pronóstico';
               if (res.data.error && res.data.error.indexOf('Sesión') !== -1){
-                localStorage.removeItem(CLAVE_STORAGE);
-                activarTab('vista-login');
+                cerrarSesionActiva();
               }
             }
           })
@@ -1711,15 +1945,38 @@
           banner.className = 'estado-pago-banner ' + (datos.estadoPago || '');
           banner.style.display = 'block';
         }
-        tabs.forEach(function(t){ t.classList.remove('active'); });
+        document.getElementById('tab-pronosticos').style.display = '';
+        tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.target === 'vista-autenticado'); });
         mostrarVista('vista-autenticado');
         cargarPartidos();
+
+        document.getElementById('userBadgeNombre').textContent = datos.nombre;
+        document.getElementById('userAvatar').textContent = datos.nombre.charAt(0).toUpperCase();
+        document.getElementById('userBadge').classList.add('visible');
       }
 
-      document.getElementById('btn-salir').addEventListener('click', function(){
-        localStorage.removeItem(CLAVE_STORAGE);
-        activarTab('vista-login');
+      window.toggleUserMenu = function(){
+        document.getElementById('userMenu').classList.toggle('visible');
+      };
+
+      document.addEventListener('click', function(e){
+        var badge = document.getElementById('userBadge');
+        if (badge && !badge.contains(e.target)){
+          document.getElementById('userMenu').classList.remove('visible');
+        }
       });
+
+      function cerrarSesionActiva(){
+        localStorage.removeItem(CLAVE_STORAGE);
+        document.getElementById('userBadge').classList.remove('visible');
+        document.getElementById('userMenu').classList.remove('visible');
+        document.getElementById('tab-pronosticos').style.display = 'none';
+        activarTab('vista-inicio');
+        mostrarSubpanel('panel-login');
+      }
+
+      document.getElementById('btn-salir').addEventListener('click', cerrarSesionActiva);
+      document.getElementById('btnSalirHeader').addEventListener('click', cerrarSesionActiva);
 
       // Si ya hay sesión guardada al cargar la página, muestra bienvenida
       // directamente (nota: esto no valida el token contra el servidor,
