@@ -1069,6 +1069,7 @@
       <div class="user-avatar" id="userAvatar"></div>
       <span id="userBadgeNombre"></span>
       <div class="user-menu" id="userMenu">
+        <div class="user-menu-item" id="btnCambiarPasswordHeader">Cambiar contraseña</div>
         <div class="user-menu-item" id="btnSalirHeader">Cerrar sesión</div>
       </div>
     </div>
@@ -1294,6 +1295,31 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modalCambiarPassword">
+    <div class="modal-box" style="max-width:420px">
+      <button class="modal-close" id="btnCerrarCambiarPassword">✕</button>
+      <div class="modal-header">
+        <div class="modal-nombre">Cambiar contraseña</div>
+      </div>
+      <form id="form-cambiar-password" novalidate>
+        <div class="campo">
+          <label for="cambiar-actual">Contraseña actual</label>
+          <input type="password" id="cambiar-actual" autocomplete="current-password" required>
+        </div>
+        <div class="campo">
+          <label for="cambiar-nueva">Contraseña nueva (mínimo 8 caracteres)</label>
+          <input type="password" id="cambiar-nueva" autocomplete="new-password" minlength="8" required>
+        </div>
+        <div class="campo">
+          <label for="cambiar-confirmar">Confírmala</label>
+          <input type="password" id="cambiar-confirmar" autocomplete="new-password" minlength="8" required>
+        </div>
+        <button class="btn-enviar" type="submit" id="btn-cambiar-password">Guardar contraseña nueva</button>
+        <div class="mensaje" id="mensaje-cambiar-password"></div>
+      </form>
+    </div>
+  </div>
+
   <script>
     (function(){
       // Tenant por hash de URL (#demo, #amigos, etc). Sin hash, cae en
@@ -1308,6 +1334,7 @@
       var URL_DESGLOSE = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/desgloseParticipante';
       var URL_GUARDAR_PRONOSTICO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/guardarPronostico';
       var URL_RECUPERAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/solicitarRecuperacion';
+      var URL_CAMBIAR_PASSWORD = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/cambiarPassword';
       var CLAVE_STORAGE = 'quiniela_sesion_' + SLUG_TENANT;
 
       var tabs = document.querySelectorAll('.tab');
@@ -1706,6 +1733,83 @@
       document.getElementById('btnCerrarDesglose').addEventListener('click', cerrarDesglose);
       document.getElementById('modalDesglose').addEventListener('click', function(e){
         if (e.target === e.currentTarget) cerrarDesglose();
+      });
+
+      // ---------- Cambiar contraseña (ya logueado) ----------
+      function cerrarCambiarPassword(){
+        document.getElementById('modalCambiarPassword').classList.remove('open');
+        document.body.style.overflow = '';
+        document.getElementById('form-cambiar-password').reset();
+        limpiarMensaje('mensaje-cambiar-password');
+      }
+
+      document.getElementById('btnCambiarPasswordHeader').addEventListener('click', function(){
+        document.getElementById('userMenu').classList.remove('visible');
+        document.getElementById('modalCambiarPassword').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+
+      document.getElementById('btnCerrarCambiarPassword').addEventListener('click', cerrarCambiarPassword);
+      document.getElementById('modalCambiarPassword').addEventListener('click', function(e){
+        if (e.target === e.currentTarget) cerrarCambiarPassword();
+      });
+
+      var formCambiarPassword = document.getElementById('form-cambiar-password');
+      var btnCambiarPassword = document.getElementById('btn-cambiar-password');
+
+      formCambiarPassword.addEventListener('submit', function(e){
+        e.preventDefault();
+        limpiarMensaje('mensaje-cambiar-password');
+
+        var sesion = obtenerSesion();
+        if (!sesion || !sesion.token){
+          mostrarMensaje('mensaje-cambiar-password', 'Tu sesión expiró, vuelve a iniciar sesión.', 'error');
+          return;
+        }
+
+        var actual = document.getElementById('cambiar-actual').value;
+        var nueva = document.getElementById('cambiar-nueva').value;
+        var confirmar = document.getElementById('cambiar-confirmar').value;
+
+        if (!actual || !nueva || !confirmar){
+          mostrarMensaje('mensaje-cambiar-password', 'Completa los tres campos.', 'error');
+          return;
+        }
+        if (nueva.length < 8){
+          mostrarMensaje('mensaje-cambiar-password', 'La contraseña nueva debe tener al menos 8 caracteres.', 'error');
+          return;
+        }
+        if (nueva !== confirmar){
+          mostrarMensaje('mensaje-cambiar-password', 'Las dos contraseñas nuevas no coinciden.', 'error');
+          return;
+        }
+
+        btnCambiarPassword.disabled = true;
+        btnCambiarPassword.textContent = 'Guardando…';
+
+        fetch(URL_CAMBIAR_PASSWORD, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({token: sesion.token, passwordActual: actual, passwordNueva: nueva})
+        })
+          .then(function(resp){
+            return resp.json().then(function(data){ return {status: resp.status, data: data}; });
+          })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              mostrarToast('Contraseña actualizada', 'ok');
+              cerrarCambiarPassword();
+            } else {
+              mostrarMensaje('mensaje-cambiar-password', res.data.error || 'No se pudo cambiar la contraseña.', 'error');
+            }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-cambiar-password', 'No pudimos conectar con el servidor. Revisa tu internet e intenta de nuevo.', 'error');
+          })
+          .finally(function(){
+            btnCambiarPassword.disabled = false;
+            btnCambiarPassword.textContent = 'Guardar contraseña nueva';
+          });
       });
 
       // ---------- Partidos ----------
