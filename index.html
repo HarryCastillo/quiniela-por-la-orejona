@@ -303,6 +303,8 @@
 
   .subtab.active{ background: var(--panel-1); color: var(--text); }
 
+  .hero-inicio{ text-align: center; margin-bottom: 22px; }
+
   .subpanel{ display: none; }
   .subpanel.active{ display: block; }
 
@@ -1089,6 +1091,7 @@
 
         <!-- Vista: Inicio (hero + registro/login) -->
         <div class="form-view active" id="vista-inicio">
+          <div class="hero-inicio">
           <div class="handles" aria-hidden="true">
             <div class="handle"></div>
             <div class="handle right"></div>
@@ -1098,6 +1101,7 @@
           <div class="season">Temporada <b>2026&ndash;2027</b></div>
           <p class="lead">Pronostica la fase de liga, playoffs y todo el camino hasta la Final de la Champions League.</p>
           <p class="sub">¿Ya jugaste con nosotros el Mundial 2026? Aquí seguimos — mismo grupo, nuevo torneo.</p>
+          </div>
 
           <div class="subtabs-inicio">
             <button type="button" class="subtab active" data-sub="panel-registro">Crear cuenta</button>
@@ -1141,10 +1145,26 @@
             <button class="btn-enviar" type="submit" id="btn-login">Iniciar sesión</button>
             <div class="mensaje" id="mensaje-login"></div>
           </form>
+          <button class="link-salir" id="btn-mostrar-recuperar" type="button" style="margin-top:14px">¿Olvidaste tu contraseña?</button>
+        </div>
+
+        <!-- Recuperar contraseña (subpanel dentro de Inicio) -->
+        <div class="subpanel" id="panel-recuperar">
+          <p style="font-size:13px;color:var(--text-3);margin:0 0 16px">Escribe tu correo y, si está registrado, te mandamos un link para poner una contraseña nueva.</p>
+          <form id="form-recuperar" novalidate>
+            <div class="campo">
+              <label for="recuperar-correo">Correo</label>
+              <input type="email" id="recuperar-correo" autocomplete="email" required>
+            </div>
+            <button class="btn-enviar" type="submit" id="btn-recuperar">Enviar link</button>
+            <div class="mensaje" id="mensaje-recuperar"></div>
+          </form>
+          <button class="link-salir" id="btn-volver-login" type="button" style="margin-top:14px">Volver a iniciar sesión</button>
         </div>
 
         </div>
         <!-- fin vista-inicio -->
+
 
         <!-- Vista: correo de verificación enviado -->
         <div class="form-view" id="vista-correo-enviado">
@@ -1287,6 +1307,7 @@
       var URL_MIS_PRONOSTICOS = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/misPronosticos';
       var URL_DESGLOSE = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/desgloseParticipante';
       var URL_GUARDAR_PRONOSTICO = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/guardarPronostico';
+      var URL_RECUPERAR = 'https://us-central1-quiniela-por-la-orejona.cloudfunctions.net/solicitarRecuperacion';
       var CLAVE_STORAGE = 'quiniela_sesion';
 
       var tabs = document.querySelectorAll('.tab');
@@ -1480,6 +1501,56 @@
           .finally(function(){
             btnLogin.disabled = false;
             btnLogin.textContent = 'Iniciar sesión';
+          });
+      });
+
+      // ---------- Recuperar contraseña ----------
+      document.getElementById('btn-mostrar-recuperar').addEventListener('click', function(){
+        mostrarSubpanel('panel-recuperar');
+      });
+
+      document.getElementById('btn-volver-login').addEventListener('click', function(){
+        mostrarSubpanel('panel-login');
+      });
+
+      var formRecuperar = document.getElementById('form-recuperar');
+      var btnRecuperar = document.getElementById('btn-recuperar');
+
+      formRecuperar.addEventListener('submit', function(e){
+        e.preventDefault();
+        limpiarMensaje('mensaje-recuperar');
+
+        var correo = document.getElementById('recuperar-correo').value.trim();
+        if (!correo){
+          mostrarMensaje('mensaje-recuperar', 'Escribe tu correo.', 'error');
+          return;
+        }
+
+        btnRecuperar.disabled = true;
+        btnRecuperar.textContent = 'Enviando…';
+
+        fetch(URL_RECUPERAR, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({slug: SLUG_TENANT, correo: correo})
+        })
+          .then(function(resp){
+            return resp.json().then(function(data){ return {status: resp.status, data: data}; });
+          })
+          .then(function(res){
+            if (res.status === 200 && res.data.ok){
+              mostrarMensaje('mensaje-recuperar', res.data.mensaje, 'ok');
+              formRecuperar.reset();
+            } else {
+              mostrarMensaje('mensaje-recuperar', res.data.error || 'No se pudo procesar la solicitud.', 'error');
+            }
+          })
+          .catch(function(){
+            mostrarMensaje('mensaje-recuperar', 'No pudimos conectar con el servidor. Revisa tu internet e intenta de nuevo.', 'error');
+          })
+          .finally(function(){
+            btnRecuperar.disabled = false;
+            btnRecuperar.textContent = 'Enviar link';
           });
       });
 
