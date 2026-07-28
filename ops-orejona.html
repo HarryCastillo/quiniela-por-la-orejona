@@ -210,6 +210,11 @@
   <!-- Panel principal -->
   <div id="panelPrincipal" class="oculto">
 
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <span style="opacity:.65;font-size:13px">Tenant activo: <strong id="tenantActual"></strong></span>
+      <button class="btn btn-fantasma" id="btnSalir">Salir</button>
+    </div>
+
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="resultados">Resultados</div>
       <div class="admin-tab" data-tab="participantes">Participantes</div>
@@ -363,7 +368,17 @@
     mostrarPanelPrincipal();
   });
 
+  document.getElementById('btnSalir').addEventListener('click', function(){
+    sessionStorage.removeItem(CLAVE_SESION);
+    adminSecret = '';
+    document.getElementById('adminSecret').value = '';
+    document.getElementById('panelPrincipal').classList.add('oculto');
+    document.getElementById('card-acceso').classList.remove('oculto');
+    mostrarMensaje('mensajeAcceso', '', '');
+  });
+
   function mostrarPanelPrincipal(){
+    document.getElementById('tenantActual').textContent = SLUG_TENANT;
     document.getElementById('card-acceso').classList.add('oculto');
     document.getElementById('panelPrincipal').classList.remove('oculto');
     cargarPartidos();
