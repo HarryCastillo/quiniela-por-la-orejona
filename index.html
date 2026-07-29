@@ -278,6 +278,47 @@
     .tab{ font-size: 11.5px; padding-bottom: 10px; }
   }
 
+  /* Nav inferior — solo móvil, solo con sesión activa (ver .visible más abajo) */
+  .bottom-nav{
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 95;
+    background: rgba(22,31,52,0.95);
+    border-top: 1px solid var(--border-2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .nav-item{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    font-family: 'Space Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 6px 2px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .nav-icon{ font-size: 19px; line-height: 1; }
+
+  .nav-item.active{ color: var(--green-light); }
+  .nav-item:hover:not(.active){ color: var(--text-2); }
+
+  @media (max-width: 640px){
+    .bottom-nav.visible{ display: flex; }
+    body.nav-inferior-activo main{ padding-bottom: 68px; }
+  }
+
   .form-body{ padding: 24px 22px 26px; }
 
   .subtabs-inicio{
@@ -1107,6 +1148,7 @@
           <div class="season">Temporada <b>2026&ndash;2027</b></div>
           <p class="lead">Pronostica la fase de liga, playoffs y todo el camino hasta la Final de la Champions League.</p>
           <p class="sub">¿Ya jugaste con nosotros el Mundial 2026? Aquí seguimos — mismo grupo, nuevo torneo.</p>
+          <p class="sub">Costo: $400 (igual que el Mundial). Sorteo UEFA: 27 de agosto de 2026. Arranque estimado: 8 de septiembre de 2026.</p>
           </div>
 
           <div class="subtabs-inicio">
@@ -1291,6 +1333,25 @@
   </div>
   </main>
 
+  <nav class="bottom-nav" id="bottomNav">
+    <button type="button" class="nav-item" data-target="vista-autenticado">
+      <span class="nav-icon">⚽</span>
+      <span>Partidos</span>
+    </button>
+    <button type="button" class="nav-item" data-target="vista-inscritos" id="nav-inscritos">
+      <span class="nav-icon">📊</span>
+      <span id="nav-inscritos-label">Inscritos</span>
+    </button>
+    <button type="button" class="nav-item" data-target="vista-premios">
+      <span class="nav-icon">🎁</span>
+      <span>Premios</span>
+    </button>
+    <button type="button" class="nav-item" data-target="vista-reglas">
+      <span class="nav-icon">📜</span>
+      <span>Reglas</span>
+    </button>
+  </nav>
+
   <div class="toast" id="toast"></div>
 
   <div class="modal-overlay" id="modalDesglose">
@@ -1397,7 +1458,7 @@
         });
       })();
 
-      var tabs = document.querySelectorAll('.tab');
+      var tabs = document.querySelectorAll('.tab, .nav-item');
       var vistas = document.querySelectorAll('.form-view');
       var inscritosCargados = false;
       var premiosCargados = false;
@@ -1657,6 +1718,7 @@
               var nombreTab = res.data.torneoIniciado ? 'Posiciones' : 'Inscritos';
               titulo.textContent = nombreTab;
               document.getElementById('tab-inscritos').textContent = nombreTab;
+              document.getElementById('nav-inscritos-label').textContent = nombreTab;
 
               if (res.data.torneoIniciado){
                 cargarPosiciones(conteo, lista);
@@ -1989,7 +2051,11 @@
         var filtrados = partidosDeFiltro(faseActiva);
         if (!filtrados.length){
           actualizarProgreso(0, 0);
-          lista.innerHTML = '<div class="empty-state">No hay partidos en esta selección todavía.</div>';
+          if (!todosPartidos.length){
+            lista.innerHTML = '<div class="empty-state">Aún no hay fixture — el sorteo de la Champions es el 27 de agosto de 2026. En cuanto salga armamos el calendario y arrancamos la quiniela (arranque estimado: 8 de septiembre).</div>';
+          } else {
+            lista.innerHTML = '<div class="empty-state">No hay partidos en esta selección todavía.</div>';
+          }
           return;
         }
 
@@ -2168,7 +2234,7 @@
       function mostrarSesionActiva(datos){
         document.getElementById('saludo-nombre').textContent = 'Hola, ' + datos.nombre;
         var textoPago = {
-          pendiente: 'Todavía no tienes pago registrado — puedes pronosticar la jornada 1. Para el resto necesitas completar tu pago.',
+          pendiente: 'Por ahora no hay nada que pagar — ya puedes pronosticar la jornada 1. En cuanto se publique el fixture real te avisamos cómo funciona el pago para el resto del torneo.',
           pagado: 'Tu pago está registrado. Ya puedes pronosticar todas las jornadas.',
           deshabilitado: 'Tu cuenta está deshabilitada por falta de pago. Contacta al administrador para regularizarte.'
         };
@@ -2184,6 +2250,9 @@
         tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.target === 'vista-autenticado'); });
         mostrarVista('vista-autenticado');
         cargarPartidos();
+
+        document.getElementById('bottomNav').classList.add('visible');
+        document.body.classList.add('nav-inferior-activo');
 
         document.getElementById('userBadgeNombre').textContent = datos.nombre;
         document.getElementById('userAvatar').textContent = datos.nombre.charAt(0).toUpperCase();
@@ -2206,6 +2275,8 @@
         document.getElementById('userBadge').classList.remove('visible');
         document.getElementById('userMenu').classList.remove('visible');
         document.getElementById('tab-pronosticos').style.display = 'none';
+        document.getElementById('bottomNav').classList.remove('visible');
+        document.body.classList.remove('nav-inferior-activo');
         activarTab('vista-inicio');
         mostrarSubpanel('panel-login');
       }
